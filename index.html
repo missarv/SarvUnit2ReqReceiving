@@ -1,0 +1,3182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=5.0, user-scalable=yes">
+    <title>SARV INDIA UNIT-2 - Item Requirement Entry &amp; Tracker (v2.3 - PDF)</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(180deg, #0d5c53 0%, #083e38 100%);
+            --secondary-color: #009688;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #cbd5e1;
+            --input-bg: #f8fafc;
+            --shadow-3d: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04), inset 0 -2px 0 0 rgba(0,0,0,0.1);
+            --btn-success-grad: linear-gradient(180deg, #10b981 0%, #047857 100%);
+            --btn-primary-grad: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+            --btn-danger-grad: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+            --btn-neutral-grad: linear-gradient(180deg, #64748b 0%, #475569 100%);
+            --btn-warn-grad: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body { display: flex; flex-direction: column; }
+
+        header {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 0 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 55px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-bottom: 1px solid #334155;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        header h1 span { color: #38bdf8; }
+
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+            margin-left: 25px;
+        }
+
+        .nav-link {
+            color: #94a3b8;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .nav-link:hover { color: #cbd5e1; background: rgba(255,255,255,0.04); }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .header-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .header-right .live-clock {
+            background: rgba(255,255,255,0.06);
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .header-right .sync-status {
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sync-status.online  { background: #064e3b; color: #6ee7b7; border:1px solid #047857; }
+        .sync-status.offline { background: #7f1d1d; color: #fecaca; border:1px solid #dc2626; }
+        .sync-status.checking{ background: #1e3a8a; color: #93c5fd; border:1px solid #2563eb; }
+
+        .container {
+            flex: 1;
+            padding: 15px;
+            max-width: 1500px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            padding: 18px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .panel-subtitle {
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .autosave-tag {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            font-size: 10px;
+            color: #047857;
+            background: #d1fae5;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            border: 1px solid #6ee7b7;
+        }
+
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
+        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 12px; }
+
+        @media (max-width: 900px) {
+            .grid-4, .grid-5 { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: 1fr; }
+            .nav-tabs { margin-left: 8px; }
+            header h1 { font-size: 14px; }
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .form-group label .req { color: #dc2626; margin-left: 2px; }
+
+        .form-control {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-color);
+            background-color: var(--input-bg);
+            outline: none;
+            height: 34px;
+            font-weight: 500;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04), 0 0 0 3px rgba(0,150,136,0.15);
+        }
+        textarea.form-control {
+            height: auto;
+            min-height: 60px;
+            resize: vertical;
+            padding: 8px 12px;
+        }
+
+        .section-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .section-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 8px;
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            color: white;
+            box-shadow: var(--shadow-3d);
+            transition: transform 0.1s ease, filter 0.2s ease;
+            letter-spacing: 0.3px;
+        }
+        .btn:hover { filter: brightness(1.08); }
+        .btn:active { transform: translateY(1px); }
+        .btn:disabled { opacity: 0.55; cursor: not-allowed; filter: grayscale(0.4); }
+        .btn-sm { padding: 4px 10px; font-size: 11px; }
+
+        .btn-primary { background: var(--btn-primary-grad); }
+        .btn-success { background: var(--btn-success-grad); }
+        .btn-danger { background: var(--btn-danger-grad); }
+        .btn-neutral { background: var(--btn-neutral-grad); }
+        .btn-warn    { background: var(--btn-warn-grad); }
+
+        .items-total-strip {
+            display: flex;
+            gap: 12px;
+            margin: 8px 0 12px 0;
+            flex-wrap: wrap;
+        }
+        .totals-pill {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        .totals-pill .lbl { color: #64748b; text-transform: uppercase; letter-spacing: 0.3px; }
+        .totals-pill .val { color: #0f172a; font-weight: 800; font-size: 13px; }
+        .totals-pill.highlight { background: #ecfeff; border-color: #67e8f9; }
+        .totals-pill.urgent { background: #fef2f2; border-color: #fca5a5; }
+        .totals-pill.urgent .val { color: #b91c1c; }
+        .totals-pill.success { background: #ecfdf5; border-color: #6ee7b7; }
+        .totals-pill.success .val { color: #047857; }
+
+        .table-container {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: auto;
+            max-height: 420px;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        thead { background: #f1f5f9; position: sticky; top: 0; z-index: 5; }
+        th {
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: 700;
+            color: #334155;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid #cbd5e1;
+            white-space: nowrap;
+        }
+        td { padding: 4px 5px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        tbody tr:hover { background: #f8fafc; }
+
+        .table-input, .table-select {
+            width: 100%;
+            padding: 5px 7px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            font-size: 12px;
+            background: #fff;
+            outline: none;
+            height: 28px;
+            font-weight: 500;
+        }
+        .table-input:focus, .table-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(0,150,136,0.15);
+        }
+        .table-input[readonly] { background:#f1f5f9; color:#64748b; }
+
+        .delete-row-btn {
+            background: transparent;
+            color: #dc2626;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 6px;
+            line-height: 1;
+        }
+        .delete-row-btn:hover { color: #991b1b; }
+
+        .sr-cell {
+            text-align: center;
+            font-weight: 700;
+            color: #475569;
+            font-size: 11px;
+        }
+
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+        }
+        .badge-pending     { background:#e0e7ff; color:#3730a3; }
+        .badge-partial     { background:#fef3c7; color:#b45309; }
+        .badge-fulfilled,
+        .badge-fully       { background:#d1fae5; color:#047857; }
+        .badge-progress    { background:#fef3c7; color:#b45309; }
+        .badge-closed      { background:#cbd5e1; color:#1e293b; }
+        .badge-cancelled   { background:#fee2e2; color:#b91c1c; }
+        .badge-po          { background:#dbeafe; color:#1d4ed8; }
+        .badge-normal      { background:#d1fae5; color:#047857; }
+        .badge-urgent      { background:#fef3c7; color:#b45309; }
+        .badge-critical    { background:#fee2e2; color:#b91c1c; }
+
+        /* Receiving table */
+        .receiving-table th, .receiving-table td { white-space: nowrap; font-size: 12px; }
+        .receiving-table th { background: #0d5c53; color: #fff; padding: 8px 6px; font-size: 10px; }
+        .receiving-table tr:hover { background: #f0fdf4; }
+        #rcvBuildTable input { width: 100%; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; height: 28px; }
+        #rcvBuildTable input.rcv-qty { background: #d1fae5; color: #047857; font-weight: 700; text-align:center; }
+
+        /* Summary table */
+        .summary-table { font-size: 11.5px; }
+        .summary-table th { background: #0d5c53; color: #fff; padding: 8px 6px; font-size: 10px; white-space: nowrap; }
+        .summary-table td { padding: 5px 6px; vertical-align: middle; white-space: nowrap; }
+        .summary-table td.num { text-align: center; font-weight: 700; }
+        .summary-table td.num.zero { color: #94a3b8; font-weight: 500; }
+        .summary-table tr:hover { background: #f0f9ff; }
+
+        /* PO Pending selection table */
+        .po-pending-table th, .po-pending-table td { white-space: nowrap; font-size: 12px; }
+        .po-pending-table tr.po-row { cursor: pointer; }
+        .po-pending-table tr.po-row:hover { background: #ecfeff; }
+        .po-pending-table tr.po-row.selected { background: #dbeafe; }
+        .po-pending-table td.po-itemcell { white-space: normal; min-width: 140px; }
+        #poBuildTable input { width: 100%; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; height: 28px; }
+        #poBuildTable .po-total { text-align:right; font-weight:700; color:#0f172a; }
+
+        /* Toast */
+        #toastContainer {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .toast {
+            background: #1e293b;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            min-width: 250px;
+            max-width: 400px;
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid #38bdf8;
+        }
+        .toast.success { border-left-color: #10b981; }
+        .toast.warn    { border-left-color: #f59e0b; }
+        .toast.error   { border-left-color: #ef4444; }
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to   { transform: translateX(0); opacity: 1; }
+        }
+
+        .footer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .footer-actions .left-group, .footer-actions .right-group {
+            display: flex; gap: 10px; align-items: center;
+        }
+        .draft-info { font-size: 11px; color: #64748b; font-style: italic; }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.6);
+            z-index: 9000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: white;
+            border-radius: 12px;
+            padding: 22px 24px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .modal-box.lg { max-width: 720px; }
+        .modal-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+        }
+        .modal-sub { font-size: 12px; color: #64748b; margin-bottom: 14px; }
+        .modal-summary {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 12px;
+            max-height: 280px;
+            overflow-y: auto;
+            margin-bottom: 14px;
+        }
+        .modal-summary .row { display: flex; justify-content: space-between; padding: 3px 0; }
+        .modal-summary .row .lbl { color: #64748b; font-weight: 600; }
+        .modal-summary .row .val { color: #0f172a; font-weight: 700; }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* Sync overlay */
+        .sync-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.55);
+            z-index: 9500;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+        }
+        .sync-overlay.active { display: flex; }
+        .sync-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px 35px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .sync-spinner {
+            width: 40px; height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top-color: var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .sync-msg { font-weight: 700; color: #0f172a; font-size: 14px; }
+
+        /* Setup-needed banner - shows only if URL is blank */
+        .setup-banner {
+            background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px dashed #b45309;
+            color: #78350f;
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .setup-banner b { font-size: 14px; color: #92400e; }
+        .setup-banner code {
+            background: #1e293b;
+            color: #fbbf24;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: inline-block;
+            margin: 2px 0;
+        }
+        .setup-banner ol { margin: 8px 0 0 0; padding-left: 22px; }
+        .setup-banner ol li { margin-bottom: 4px; }
+
+        /* Manage Tab */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .filter-bar {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 14px;
+            align-items: end;
+        }
+        @media (max-width: 900px) {
+            .filter-bar { grid-template-columns: 1fr 1fr; }
+        }
+
+        .req-list-table th, .req-list-table td { white-space: nowrap; }
+        .req-row { cursor: pointer; }
+        .req-row:hover { background: #ecfeff; }
+        .req-row.selected { background: #e0f2fe; }
+
+        /* Detail panel */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px 16px;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+        @media (max-width: 900px) {
+            .detail-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .detail-grid .field { display: flex; flex-direction: column; gap: 2px; }
+        .detail-grid .field .lbl {
+            font-size: 9px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            font-weight: 700;
+        }
+        .detail-grid .field .val {
+            font-size: 13px;
+            color: #0f172a;
+            font-weight: 600;
+            min-height: 18px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+        .empty-state .ico { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
+
+        .col-issued-input {
+            width: 60px !important;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SARV <span>INDIA</span></h1>
+        <div class="nav-tabs">
+            <div class="nav-link active" data-tab="entry">📝 New Entry</div>
+            <div class="nav-link" data-tab="manage">📋 Manage &amp; Update</div>
+            <div class="nav-link" data-tab="po">🛒 PO Generation</div>
+            <div class="nav-link" data-tab="receive">📥 Receiving Items</div>
+            <div class="nav-link" data-tab="summary">📊 Summary</div>
+        </div>
+        <div class="header-right">
+            <span class="sync-status checking" id="syncStatus">Checking...</span>
+            <span class="live-clock" id="liveClock">--:--:--</span>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- ================== TAB 1: NEW ENTRY ================== -->
+        <div class="tab-content active" id="tab-entry">
+
+            <!-- Setup banner - auto-shows ONLY if APPS_SCRIPT_URL is empty -->
+            <div class="setup-banner" id="setupBanner" style="display:none;">
+                <b>⚠️ Setup Required:</b> Apps Script URL configured nahi hai. HTML file me edit karke daalo:
+                <ol>
+                    <li>Is HTML file ko Notepad / VS Code me kholo</li>
+                    <li><code>&lt;script&gt;</code> tag ke andar yeh line dhundo: <code>const APPS_SCRIPT_URL = "";</code></li>
+                    <li>Apna deployed Apps Script URL quotes ke andar paste karo</li>
+                    <li>Save karke browser refresh karo</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <div class="autosave-tag">&#128274; Draft Auto-Saved</div>
+                <h2 class="panel-title">PERSONNEL ITEM REQUIREMENT FORM</h2>
+                <div class="panel-subtitle">Capture requested items &middot; Auto-sync to Google Sheets</div>
+
+                <div class="section-header-row">
+                    <h3 class="section-title">Request Details</h3>
+                </div>
+
+                <div class="grid-4">
+                    <div class="form-group">
+                        <label>Date <span class="req">*</span></label>
+                        <input type="date" class="form-control" id="reqDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Requirement No. (Auto)</label>
+                        <input type="text" class="form-control" id="reqNoField" placeholder="Auto" disabled style="font-weight:700; background-color:#f1f5f9; color:#0284c7;">
+                    </div>
+                    <div class="form-group">
+                        <label>Required By Date <span class="req">*</span></label>
+                        <input type="date" class="form-control" id="requiredByDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Priority <span class="req">*</span></label>
+                        <select class="form-control" id="priority">
+                            <option value="Normal">&#128994; Normal</option>
+                            <option value="Urgent">&#128993; Urgent</option>
+                            <option value="Critical">&#128308; Critical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-header-row">
+                    <h3 class="section-title">Requested By</h3>
+                </div>
+
+                <div class="grid-4">
+                    <div class="form-group">
+                        <label>Person Name <span class="req">*</span></label>
+                        <input type="text" class="form-control" id="reqPersonName" placeholder="Full name of requester">
+                    </div>
+                    <div class="form-group">
+                        <label>Employee Code</label>
+                        <input type="text" class="form-control" id="reqEmpCode" placeholder="e.g. EMP-0234">
+                    </div>
+                    <div class="form-group">
+                        <label>Designation</label>
+                        <input type="text" class="form-control" id="reqDesignation" placeholder="e.g. Production Supervisor">
+                    </div>
+                    <div class="form-group">
+                        <label>Department <span class="req">*</span></label>
+                        <select class="form-control" id="reqDepartment">
+                            <option value="">-- Select --</option>
+                            <option>Weaving</option>
+                            <option>Dyeing</option>
+                            <option>Finishing</option>
+                            <option>Raising</option>
+                            <option>Cutting / Stitching</option>
+                            <option>Packing</option>
+                            <option>Quality Control</option>
+                            <option>Maintenance</option>
+                            <option>Store</option>
+                            <option>Dispatch</option>
+                            <option>Admin / HR</option>
+                            <option>Accounts</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>Contact No.</label>
+                        <input type="tel" class="form-control" id="reqContact" placeholder="10-digit mobile" maxlength="15">
+                    </div>
+                    <div class="form-group">
+                        <label>Machine / Line (if applicable)</label>
+                        <input type="text" class="form-control" id="reqMachine" placeholder="e.g. Raising M/C #3 or Loom-12">
+                    </div>
+                    <div class="form-group">
+                        <label>Purpose / Reason <span class="req">*</span></label>
+                        <input type="text" class="form-control" id="reqPurpose" placeholder="e.g. Loom maintenance, sample run">
+                    </div>
+                </div>
+
+                <div class="section-header-row">
+                    <h3 class="section-title">Items Required</h3>
+                    <button class="btn btn-primary" id="addItemBtn">+ Add New Item</button>
+                </div>
+
+                <div class="items-total-strip">
+                    <span class="totals-pill"><span class="lbl">Total Items</span><span class="val" id="totalItemCount">0</span></span>
+                    <span class="totals-pill highlight"><span class="lbl">Total Qty</span><span class="val" id="totalQty">0</span></span>
+                    <span class="totals-pill urgent" id="urgentPill" style="display:none;"><span class="lbl">Priority</span><span class="val" id="priorityBadge">--</span></span>
+                </div>
+
+                <div class="table-container">
+                    <table id="itemsTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 4%; text-align: center;">Sr.</th>
+                                <th style="width: 16%;">Item Name <span style="color:#dc2626;">*</span></th>
+                                <th style="width: 22%;">Item Description / Spec</th>
+                                <th style="width: 11%;">MAKE / Brand</th>
+                                <th style="width: 12%;">Category</th>
+                                <th style="width: 8%;">Qty <span style="color:#dc2626;">*</span></th>
+                                <th style="width: 8%;">UOM</th>
+                                <th style="width: 15%;">Item Remarks</th>
+                                <th style="width: 4%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="form-group" style="margin-top: 14px;">
+                    <label>Overall Remarks (optional)</label>
+                    <textarea class="form-control" id="overallRemarks" rows="2" placeholder="Any additional note about this requirement..."></textarea>
+                </div>
+
+                <div class="footer-actions">
+                    <div class="left-group">
+                        <span class="draft-info" id="draftInfo">No draft saved yet.</span>
+                    </div>
+                    <div class="right-group">
+                        <button class="btn btn-neutral" id="clearBtn">&#128465; Clear Form</button>
+                        <button class="btn btn-primary" id="exportCsvBtn">&#128190; Export CSV</button>
+                        <button class="btn btn-success" id="submitBtn">&#9989; Submit &amp; Sync</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================== TAB 2: MANAGE & UPDATE ================== -->
+        <div class="tab-content" id="tab-manage">
+            <div class="card">
+                <h2 class="panel-title">REQUIREMENTS MANAGEMENT &amp; STATUS UPDATE</h2>
+                <div class="panel-subtitle">Search, view &amp; update fulfillment status of all submitted requirements</div>
+
+                <div class="filter-bar">
+                    <div class="form-group">
+                        <label>Search (Req No / Person / Purpose)</label>
+                        <input type="text" class="form-control" id="filterSearch" placeholder="e.g. REQ-20251101 or Rajesh">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" id="filterStatus">
+                            <option value="">All</option>
+                            <option>Pending</option>
+                            <option>In Progress</option>
+                            <option>Fulfilled</option>
+                            <option>Closed</option>
+                            <option>Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select class="form-control" id="filterDept">
+                            <option value="">All</option>
+                            <option>Weaving</option><option>Dyeing</option><option>Finishing</option>
+                            <option>Raising</option><option>Cutting / Stitching</option><option>Packing</option>
+                            <option>Quality Control</option><option>Maintenance</option><option>Store</option>
+                            <option>Dispatch</option><option>Admin / HR</option><option>Accounts</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select class="form-control" id="filterPriority">
+                            <option value="">All</option>
+                            <option>Normal</option><option>Urgent</option><option>Critical</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>From Date</label>
+                        <input type="date" class="form-control" id="filterFrom">
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" id="refreshListBtn" style="height: 34px;">&#128260; Reload</button>
+                    </div>
+                </div>
+
+                <div class="items-total-strip">
+                    <span class="totals-pill"><span class="lbl">Showing</span><span class="val" id="listCount">0</span></span>
+                    <span class="totals-pill" id="pillPending" style="display:none;background:#e0e7ff;border-color:#a5b4fc;"><span class="lbl">Pending</span><span class="val" id="cntPending">0</span></span>
+                    <span class="totals-pill" id="pillProgress" style="display:none;background:#fef3c7;border-color:#fcd34d;"><span class="lbl">In Progress</span><span class="val" id="cntProgress">0</span></span>
+                    <span class="totals-pill success" id="pillFulfilled" style="display:none;"><span class="lbl">Fulfilled</span><span class="val" id="cntFulfilled">0</span></span>
+                </div>
+
+                <div class="table-container" style="max-height: 320px;">
+                    <table class="req-list-table">
+                        <thead>
+                            <tr>
+                                <th>Req No</th>
+                                <th>Date</th>
+                                <th>Person</th>
+                                <th>Department</th>
+                                <th>Purpose</th>
+                                <th style="text-align:center;">Items</th>
+                                <th style="text-align:center;">Qty</th>
+                                <th style="text-align:center;">Issued</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reqListBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Detail panel -->
+                <div id="detailPanel" style="margin-top: 18px; display:none;">
+                    <div class="section-header-row">
+                        <h3 class="section-title" id="detailTitle">Requirement Details</h3>
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                            <span id="detailMasterStatus"></span>
+                            <button class="btn btn-primary btn-sm" id="openPdfBtn" title="Open PDF (print)">&#128196; Print PDF</button>
+                            <button class="btn btn-neutral btn-sm" id="regenPdfBtn" title="Regenerate PDF with latest data">&#128260; Regen PDF</button>
+                            <button class="btn btn-warn btn-sm" id="closeMasterBtn">&#128274; Mark Closed</button>
+                            <button class="btn btn-danger btn-sm" id="cancelMasterBtn">&#10060; Cancel Requirement</button>
+                        </div>
+                    </div>
+
+                    <div class="detail-grid" id="detailGrid"></div>
+
+                    <div class="section-header-row" style="margin-top: 8px;">
+                        <h4 class="section-title" style="font-size:12px;">Items - Update Status</h4>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <input type="text" class="form-control" id="updatedByField" placeholder="Your Name (issued by)" style="width: 180px; height: 28px; font-size: 12px;">
+                            <button class="btn btn-success btn-sm" id="saveAllItemsBtn">&#128190; Save All Changes</button>
+                        </div>
+                    </div>
+
+                    <div class="table-container" style="max-height: 380px;">
+                        <table id="detailItemsTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 4%; text-align:center;">Sr.</th>
+                                    <th style="width: 14%;">Item Name</th>
+                                    <th style="width: 14%;">Description</th>
+                                    <th style="width: 6%; text-align:center;">Req</th>
+                                    <th style="width: 7%; text-align:center;">Issued</th>
+                                    <th style="width: 7%; text-align:center;background:#fee2e2;color:#b91c1c;">Cancelled</th>
+                                    <th style="width: 7%; text-align:center;background:#dbeafe;color:#1d4ed8;">In PO</th>
+                                    <th style="width: 7%; text-align:center;">Avail</th>
+                                    <th style="width: 5%;">UOM</th>
+                                    <th style="width: 13%;">Status</th>
+                                    <th style="width: 12%;">Issue Remarks</th>
+                                    <th style="width: 4%;"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailItemsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="detailEmpty" class="empty-state" style="margin-top:14px;">
+                    <div class="ico">📋</div>
+                    <div>Select a row above to view items &amp; update status</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================== TAB 3: PO GENERATION ================== -->
+        <div class="tab-content" id="tab-po">
+            <div class="card">
+                <h2 class="panel-title">PURCHASE ORDER (PO) GENERATION</h2>
+                <div class="panel-subtitle">Combine pending items from multiple requirements &middot; auto-generate professional PO PDF</div>
+
+                <!-- PO sub-nav -->
+                <div style="display:flex; gap:6px; margin-bottom:12px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+                    <button class="btn btn-primary btn-sm" id="poSubPendingBtn">📦 Pending Items (Build PO)</button>
+                    <button class="btn btn-neutral btn-sm" id="poSubListBtn">📜 Generated POs</button>
+                </div>
+
+                <!-- ==== Sub-panel A: Pending items selection ==== -->
+                <div id="poPendingPanel">
+                    <div class="filter-bar">
+                        <div class="form-group">
+                            <label>Search (Req / Item / Vendor)</label>
+                            <input type="text" class="form-control" id="poFilterSearch" placeholder="e.g. PR2025... or BEARING">
+                        </div>
+                        <div class="form-group">
+                            <label>Department</label>
+                            <select class="form-control" id="poFilterDept">
+                                <option value="">All</option>
+                                <option>Weaving</option><option>Dyeing</option><option>Finishing</option>
+                                <option>Raising</option><option>Cutting / Stitching</option><option>Packing</option>
+                                <option>Quality Control</option><option>Maintenance</option><option>Store</option>
+                                <option>Dispatch</option><option>Admin / HR</option><option>Accounts</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <select class="form-control" id="poFilterPriority">
+                                <option value="">All</option>
+                                <option>Normal</option><option>Urgent</option><option>Critical</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Req. No.</label>
+                            <input type="text" class="form-control" id="poFilterReqNo" placeholder="PR2025...">
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" id="poRefreshBtn" style="height: 34px;">&#128260; Reload</button>
+                        </div>
+                        <div>
+                            <button class="btn btn-success" id="poBuildBtn" style="height: 34px;" disabled>🛒 Build PO (<span id="poSelCount">0</span>)</button>
+                        </div>
+                    </div>
+
+                    <div class="items-total-strip">
+                        <span class="totals-pill"><span class="lbl">Pending Items</span><span class="val" id="poPendingCount">0</span></span>
+                        <span class="totals-pill highlight"><span class="lbl">Selected</span><span class="val" id="poSelCount2">0</span></span>
+                        <span class="totals-pill success"><span class="lbl">Selected Qty</span><span class="val" id="poSelQty">0</span></span>
+                    </div>
+
+                    <div class="table-container" style="max-height: 480px;">
+                        <table class="po-pending-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:30px; text-align:center;"><input type="checkbox" id="poSelectAll"></th>
+                                    <th>Req No</th>
+                                    <th>Sr</th>
+                                    <th>Item Name</th>
+                                    <th>Description</th>
+                                    <th>Make</th>
+                                    <th>Dept</th>
+                                    <th style="text-align:center;">Req Qty</th>
+                                    <th style="text-align:center;">Issued</th>
+                                    <th style="text-align:center;">Cancelled</th>
+                                    <th style="text-align:center;">In PO</th>
+                                    <th style="text-align:center; background:#dbeafe; color:#1d4ed8;">Available</th>
+                                    <th>UOM</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                </tr>
+                            </thead>
+                            <tbody id="poPendingBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ==== Sub-panel B: Generated POs list ==== -->
+                <div id="poListPanel" style="display:none;">
+                    <div class="filter-bar" style="grid-template-columns: 3fr 1fr auto;">
+                        <div class="form-group">
+                            <label>Search (PO No / Vendor / Req No)</label>
+                            <input type="text" class="form-control" id="poListSearch" placeholder="e.g. PO/U-2/0001 or vendor name">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" id="poListStatus">
+                                <option value="">All</option>
+                                <option>Generated</option><option>Partially Received</option>
+                                <option>Received</option><option>Cancelled</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" id="poListRefreshBtn" style="height: 34px;">&#128260; Reload</button>
+                        </div>
+                    </div>
+
+                    <div class="items-total-strip">
+                        <span class="totals-pill"><span class="lbl">Showing</span><span class="val" id="poListCount">0</span></span>
+                    </div>
+
+                    <div class="table-container" style="max-height: 320px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>PO No</th>
+                                    <th>Date</th>
+                                    <th>Vendor</th>
+                                    <th>Linked Req(s)</th>
+                                    <th style="text-align:center;">Items</th>
+                                    <th style="text-align:center;">Qty</th>
+                                    <th style="text-align:right;">Grand Total</th>
+                                    <th>Status</th>
+                                    <th>PDF</th>
+                                </tr>
+                            </thead>
+                            <tbody id="poListBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================== TAB 4: RECEIVING ITEMS ================== -->
+        <div class="tab-content" id="tab-receive">
+            <div class="card">
+                <h2 class="panel-title">📥 RECEIVING ITEMS (AGAINST PO)</h2>
+                <div class="panel-subtitle">Open a PO &middot; enter received qty per item &middot; capture Gate Pass No</div>
+
+                <div class="filter-bar" style="grid-template-columns: 2fr 1fr 1fr 1fr auto;">
+                    <div class="form-group">
+                        <label>Search (PO No / Vendor / Req)</label>
+                        <input type="text" class="form-control" id="recFilterSearch" placeholder="e.g. PO/U-2/0001 or vendor">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" id="recFilterStatus">
+                            <option value="">All Open</option>
+                            <option>Generated</option>
+                            <option>Partially Received</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>PO Date From</label>
+                        <input type="date" class="form-control" id="recFilterPoDateFrom">
+                    </div>
+                    <div class="form-group">
+                        <label>PO Date To</label>
+                        <input type="date" class="form-control" id="recFilterPoDateTo">
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" id="recRefreshBtn" style="height: 34px;">&#128260; Reload</button>
+                    </div>
+                </div>
+
+                <div class="items-total-strip">
+                    <span class="totals-pill"><span class="lbl">Open POs</span><span class="val" id="recPoCount">0</span></span>
+                    <span class="totals-pill highlight"><span class="lbl">Ordered Qty</span><span class="val" id="recTotOrd">0</span></span>
+                    <span class="totals-pill success"><span class="lbl">Received Qty</span><span class="val" id="recTotRcv">0</span></span>
+                    <span class="totals-pill" style="background:#fef3c7;border-color:#fcd34d;color:#b45309;"><span class="lbl">Pending Qty</span><span class="val" id="recTotPnd">0</span></span>
+                </div>
+
+                <div class="table-container" style="max-height: 540px;">
+                    <table class="receiving-table">
+                        <thead>
+                            <tr>
+                                <th>PO No</th>
+                                <th>PO Date</th>
+                                <th>Vendor</th>
+                                <th>Linked Req(s)</th>
+                                <th style="text-align:center;">Items</th>
+                                <th style="text-align:center;">Pending Items</th>
+                                <th style="text-align:center;">Ordered</th>
+                                <th style="text-align:center;">Received</th>
+                                <th style="text-align:center;background:#fef3c7;color:#b45309;">Pending</th>
+                                <th>Status</th>
+                                <th style="text-align:center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recPoBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================== TAB 5: SUMMARY ================== -->
+        <div class="tab-content" id="tab-summary">
+            <div class="card">
+                <h2 class="panel-title">📊 ITEMS &amp; PO SUMMARY DASHBOARD</h2>
+                <div class="panel-subtitle">Full per-item breakdown across all requirements &middot; PO PDF links inline</div>
+
+                <div class="filter-bar" style="grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;">
+                    <div class="form-group">
+                        <label>Search (Req / Item / Person / PO)</label>
+                        <input type="text" class="form-control" id="sumFilterSearch" placeholder="e.g. PR2025... or BEARING or PO/U-2/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Item Status</label>
+                        <select class="form-control" id="sumFilterStatus">
+                            <option value="">All</option>
+                            <option>Pending</option>
+                            <option>PO Generated</option>
+                            <option>Received</option>
+                            <option>Partially Issued</option>
+                            <option>Fully Issued</option>
+                            <option>Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select class="form-control" id="sumFilterDept">
+                            <option value="">All</option>
+                            <option>Weaving</option><option>Dyeing</option><option>Finishing</option>
+                            <option>Raising</option><option>Cutting / Stitching</option><option>Packing</option>
+                            <option>Quality Control</option><option>Maintenance</option><option>Store</option>
+                            <option>Dispatch</option><option>Admin / HR</option><option>Accounts</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select class="form-control" id="sumFilterPriority">
+                            <option value="">All</option>
+                            <option>Normal</option><option>Urgent</option><option>Critical</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Req. No.</label>
+                        <input type="text" class="form-control" id="sumFilterReqNo" placeholder="PR2025...">
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" id="sumRefreshBtn" style="height: 34px;">&#128260; Reload</button>
+                    </div>
+                </div>
+
+                <!-- Date Range Filters Row -->
+                <div class="filter-bar" style="grid-template-columns: 1fr 1fr 1fr 1fr auto auto; margin-top:-4px;">
+                    <div class="form-group">
+                        <label>Request Date From</label>
+                        <input type="date" class="form-control" id="sumReqDateFrom">
+                    </div>
+                    <div class="form-group">
+                        <label>Request Date To</label>
+                        <input type="date" class="form-control" id="sumReqDateTo">
+                    </div>
+                    <div class="form-group">
+                        <label style="color:#1d4ed8;">PO Date From</label>
+                        <input type="date" class="form-control" id="sumPoDateFrom" style="background:#dbeafe;">
+                    </div>
+                    <div class="form-group">
+                        <label style="color:#1d4ed8;">PO Date To</label>
+                        <input type="date" class="form-control" id="sumPoDateTo" style="background:#dbeafe;">
+                    </div>
+                    <div>
+                        <button class="btn btn-neutral btn-sm" id="sumClearDatesBtn" style="height: 34px;" title="Clear all date filters">&#10006; Clear Dates</button>
+                    </div>
+                    <div>
+                        <span class="totals-pill" id="sumDateActivePill" style="display:none;height:34px;background:#fef3c7;border-color:#fcd34d;"><span class="lbl">Date Filter</span><span class="val" style="color:#b45309;">ACTIVE</span></span>
+                    </div>
+                </div>
+
+                <div class="items-total-strip">
+                    <span class="totals-pill"><span class="lbl">Rows</span><span class="val" id="sumCount">0</span></span>
+                    <span class="totals-pill highlight"><span class="lbl">Total Requested</span><span class="val" id="sumTotalReq">0</span></span>
+                    <span class="totals-pill success"><span class="lbl">Issued</span><span class="val" id="sumTotalIssued">0</span></span>
+                    <span class="totals-pill" style="background:#d1fae5;border-color:#6ee7b7;color:#047857;"><span class="lbl">Received</span><span class="val" id="sumTotalReceived">0</span></span>
+                    <span class="totals-pill" style="background:#fee2e2;border-color:#fca5a5;color:#b91c1c;"><span class="lbl">Cancelled</span><span class="val" id="sumTotalCancel">0</span></span>
+                    <span class="totals-pill" style="background:#dbeafe;border-color:#93c5fd;color:#1d4ed8;"><span class="lbl">In PO</span><span class="val" id="sumTotalPO">0</span></span>
+                    <span class="totals-pill"><span class="lbl">Available</span><span class="val" id="sumTotalAvail">0</span></span>
+                    <button class="btn btn-success btn-sm" id="sumExportCsvBtn" style="margin-left:auto;">&#128190; Export CSV</button>
+                </div>
+
+                <div class="table-container" style="max-height: 580px;">
+                    <table class="summary-table">
+                        <thead>
+                            <tr>
+                                <th>Requirement No</th>
+                                <th>Request Date</th>
+                                <th>Person Name</th>
+                                <th>Item Name</th>
+                                <th>Item Description</th>
+                                <th>Make / Brand</th>
+                                <th>Category</th>
+                                <th style="text-align:center;">Qty Requested</th>
+                                <th style="text-align:center;">Qty Issued</th>
+                                <th style="text-align:center;">Qty Cancelled</th>
+                                <th style="text-align:center;">Qty PO Generated</th>
+                                <th style="text-align:center;background:#d1fae5;color:#047857;">Received Qty</th>
+                                <th>Gate Pass No</th>
+                                <th style="text-align:center;">Available</th>
+                                <th>Item Status</th>
+                                <th>PO No (If Generated)</th>
+                                <th>PO PDF (If Generated)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summaryBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ PO BUILD MODAL ============ -->
+    <div class="modal-overlay" id="poBuildModal">
+        <div class="modal-box" style="max-width: 1000px; width: 100%; max-height: 92vh; overflow-y: auto;">
+            <h3 class="modal-title">🛒 Build New Purchase Order</h3>
+            <p class="modal-sub">Fill vendor &amp; pricing details. PDF will auto-generate &amp; save to Drive.</p>
+
+            <div class="grid-4">
+                <div class="form-group">
+                    <label>PO Number (Auto)</label>
+                    <input type="text" class="form-control" id="poNoField" placeholder="Auto" style="font-weight:700; background:#f1f5f9; color:#0284c7;">
+                </div>
+                <div class="form-group">
+                    <label>PO Date <span class="req">*</span></label>
+                    <input type="date" class="form-control" id="poDateField">
+                </div>
+                <div class="form-group">
+                    <label>Delivery Date</label>
+                    <input type="date" class="form-control" id="poDeliveryField">
+                </div>
+                <div class="form-group">
+                    <label>Created By</label>
+                    <input type="text" class="form-control" id="poCreatedByField" placeholder="Your name">
+                </div>
+            </div>
+
+            <div class="grid-3" style="margin-bottom:8px;">
+                <div class="form-group">
+                    <label>Vendor (M/s) <span class="req">*</span></label>
+                    <input type="text" class="form-control" id="poVendorField" placeholder="Vendor name">
+                </div>
+                <div class="form-group">
+                    <label>Vendor GST IN</label>
+                    <input type="text" class="form-control" id="poVendorGstField" placeholder="e.g. 06ABCDE1234F1Z5">
+                </div>
+                <div class="form-group">
+                    <label>Vendor Contact</label>
+                    <input type="text" class="form-control" id="poVendorContactField" placeholder="phone / email">
+                </div>
+            </div>
+
+            <div class="grid-3" style="margin-bottom:10px;">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Vendor Address</label>
+                    <textarea class="form-control" id="poVendorAddressField" rows="2" placeholder="Vendor full address"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Payment Terms</label>
+                    <input type="text" class="form-control" id="poPaymentTermsField" value="Payment terms 90 days after receipt of bill">
+                </div>
+            </div>
+
+            <div class="section-header-row" style="margin-top:6px;">
+                <h4 class="section-title" style="font-size:12px;">Items in this PO</h4>
+            </div>
+            <div class="table-container" style="max-height: 260px;">
+                <table id="poBuildTable">
+                    <thead>
+                        <tr>
+                            <th style="width:4%; text-align:center;">Sr</th>
+                            <th style="width:10%;">Req No</th>
+                            <th style="width:16%;">Item Name</th>
+                            <th style="width:13%;">Description</th>
+                            <th style="width:9%;">Make</th>
+                            <th style="width:7%; text-align:center;" title="Available qty for this PO">Avail</th>
+                            <th style="width:10%; background:#dbeafe; color:#1d4ed8;">PO Qty <span style="color:#dc2626;">*</span></th>
+                            <th style="width:5%;">UOM</th>
+                            <th style="width:11%;">Unit Price <span style="color:#dc2626;">*</span></th>
+                            <th style="width:12%; text-align:right;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="poBuildBody"></tbody>
+                </table>
+            </div>
+
+            <div class="grid-4" style="margin-top:14px;">
+                <div class="form-group">
+                    <label>GST %</label>
+                    <input type="number" class="form-control" id="poGstPctField" min="0" max="100" step="0.01" value="18">
+                </div>
+                <div class="form-group">
+                    <label>Freight (₹)</label>
+                    <input type="number" class="form-control" id="poFreightField" min="0" step="0.01" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Other Exp. Label</label>
+                    <input type="text" class="form-control" id="poOtherLabelField" value="Other Expense">
+                </div>
+                <div class="form-group">
+                    <label>Other Exp. (₹)</label>
+                    <input type="number" class="form-control" id="poOtherExpField" min="0" step="0.01" value="0">
+                </div>
+            </div>
+
+            <div class="items-total-strip" style="margin-top:10px;">
+                <span class="totals-pill"><span class="lbl">Subtotal</span><span class="val" id="poSubtotalView">0.00</span></span>
+                <span class="totals-pill"><span class="lbl">GST</span><span class="val" id="poGstAmtView">0.00</span></span>
+                <span class="totals-pill"><span class="lbl">Freight</span><span class="val" id="poFreightView">0.00</span></span>
+                <span class="totals-pill"><span class="lbl" id="poOtherViewLbl">Other</span><span class="val" id="poOtherView">0.00</span></span>
+                <span class="totals-pill success"><span class="lbl">Grand Total</span><span class="val" id="poGrandTotalView">0.00</span></span>
+            </div>
+
+            <div class="form-group" style="margin-top:10px;">
+                <label>Important Notes</label>
+                <textarea class="form-control" id="poNotesField" rows="2" placeholder="Special instructions, packaging, etc."></textarea>
+            </div>
+
+            <div class="modal-actions" style="margin-top: 14px;">
+                <button class="btn btn-neutral" id="poBuildCancelBtn">Cancel</button>
+                <button class="btn btn-success" id="poBuildConfirmBtn">🛒 Generate PO &amp; PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ RECEIVE PO ITEMS MODAL ============ -->
+    <div class="modal-overlay" id="receiveModal">
+        <div class="modal-box" style="max-width: 1050px; width: 100%; max-height: 92vh; overflow-y: auto;">
+            <h3 class="modal-title">📥 Receive Items Against PO</h3>
+            <p class="modal-sub" id="receiveModalSub">PO: -</p>
+
+            <div class="grid-4" style="margin-bottom:10px;">
+                <div class="form-group">
+                    <label>PO No</label>
+                    <input type="text" class="form-control" id="rcvPoNoField" readonly style="background:#f1f5f9;font-weight:700;color:#0284c7;">
+                </div>
+                <div class="form-group">
+                    <label>Vendor</label>
+                    <input type="text" class="form-control" id="rcvVendorField" readonly style="background:#f1f5f9;">
+                </div>
+                <div class="form-group">
+                    <label>Receipt Date <span class="req">*</span></label>
+                    <input type="date" class="form-control" id="rcvDateField">
+                </div>
+                <div class="form-group">
+                    <label>Received By <span class="req">*</span></label>
+                    <input type="text" class="form-control" id="rcvByField" placeholder="Your name">
+                </div>
+            </div>
+
+            <div class="grid-3" style="margin-bottom:6px;">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Gate Pass No <span class="req">*</span></label>
+                    <input type="text" class="form-control" id="rcvGpField" placeholder="e.g. GP-2026-0142" style="font-weight:700;background:#fef3c7;">
+                </div>
+                <div class="form-group">
+                    <label>Overall Remarks</label>
+                    <input type="text" class="form-control" id="rcvRemarksField" placeholder="optional">
+                </div>
+            </div>
+
+            <div class="section-header-row" style="margin-top:6px;">
+                <h4 class="section-title" style="font-size:12px;">Items - Enter Received Qty for this receipt</h4>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <button class="btn btn-neutral btn-sm" id="rcvFillPendingBtn">⚡ Fill = All Pending</button>
+                    <button class="btn btn-neutral btn-sm" id="rcvClearAllBtn">✖ Clear All</button>
+                </div>
+            </div>
+            <div class="table-container" style="max-height: 320px;">
+                <table id="rcvBuildTable">
+                    <thead>
+                        <tr>
+                            <th style="width:4%; text-align:center;">Sr</th>
+                            <th style="width:10%;">Req No</th>
+                            <th style="width:18%;">Item Name</th>
+                            <th style="width:11%;">Make</th>
+                            <th style="width:5%;">UOM</th>
+                            <th style="width:8%; text-align:center;">Ordered</th>
+                            <th style="width:8%; text-align:center;">Already Recv</th>
+                            <th style="width:8%; text-align:center;background:#fef3c7;color:#b45309;">Pending</th>
+                            <th style="width:11%; background:#d1fae5;color:#047857;">Receive Now <span style="color:#dc2626;">*</span></th>
+                            <th style="width:17%;">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rcvBuildBody"></tbody>
+                </table>
+            </div>
+
+            <div class="items-total-strip" style="margin-top:10px;">
+                <span class="totals-pill"><span class="lbl">Ordered Total</span><span class="val" id="rcvTotOrd">0</span></span>
+                <span class="totals-pill success"><span class="lbl">Already Received</span><span class="val" id="rcvTotAlready">0</span></span>
+                <span class="totals-pill"><span class="lbl">Pending</span><span class="val" id="rcvTotPending">0</span></span>
+                <span class="totals-pill" style="background:#d1fae5;border-color:#6ee7b7;color:#047857;"><span class="lbl">This Receipt</span><span class="val" id="rcvTotNow">0</span></span>
+            </div>
+
+            <div class="modal-actions" style="margin-top: 14px;">
+                <button class="btn btn-neutral" id="rcvCancelBtn">Cancel</button>
+                <button class="btn btn-success" id="rcvConfirmBtn">📥 Save Receipt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ CONFIRM MODAL ============ -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
+            <h3 class="modal-title">&#128221; Confirm Requirement Submission</h3>
+            <p class="modal-sub">Review summary &middot; on confirm, data syncs to Google Sheets.</p>
+            <div class="modal-summary" id="modalSummary"></div>
+            <div class="modal-actions">
+                <button class="btn btn-neutral" id="modalCancelBtn">Cancel</button>
+                <button class="btn btn-success" id="modalConfirmBtn">&#9989; Confirm &amp; Sync</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MASTER ACTION MODAL ============ -->
+    <div class="modal-overlay" id="masterActionModal">
+        <div class="modal-box">
+            <h3 class="modal-title" id="masterActionTitle">Action</h3>
+            <p class="modal-sub" id="masterActionSub"></p>
+            <div class="form-group">
+                <label>Remarks <span class="req">*</span></label>
+                <textarea class="form-control" id="masterActionRemarks" rows="2" placeholder="Reason / closing note..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Updated By</label>
+                <input type="text" class="form-control" id="masterActionBy" placeholder="Your name">
+            </div>
+            <div class="modal-actions" style="margin-top: 12px;">
+                <button class="btn btn-neutral" id="masterActionCancelBtn">Cancel</button>
+                <button class="btn btn-success" id="masterActionConfirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ SYNC OVERLAY ============ -->
+    <div class="sync-overlay" id="syncOverlay">
+        <div class="sync-box">
+            <div class="sync-spinner"></div>
+            <div class="sync-msg" id="syncMsg">Syncing to Google Sheets...</div>
+        </div>
+    </div>
+
+    <div id="toastContainer"></div>
+
+    <script>
+    /* ═══════════════════════════════════════════════════════════════════
+       ███████████████████████████████████████████████████████████████████
+       ██                                                               ██
+       ██   🔧 SETUP: APPS SCRIPT URL YAHAN PASTE KARO 🔧               ██
+       ██                                                               ██
+       ██   Niche wali line me apna deployed Apps Script URL daalo.     ██
+       ██   URL ka format aisa hota hai:                                ██
+       ██   https://script.google.com/macros/s/AKfycby....../exec       ██
+       ██                                                               ██
+       ███████████████████████████████████████████████████████████████████
+       ═══════════════════════════════════════════════════════════════════ */
+
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUupGm6_olJpaR59tu5mv-sdQmt0aq-zYYNfKi4Pm22RyrF3mNWJr38fYb_KzKC6kwqQ/exec";
+
+    /* ═══════════════════════════════════════════════════════════════════
+       ⬆️ Bas yahi ek line edit karni hai - aage kuch chedhna nahi. ⬆️
+       ═══════════════════════════════════════════════════════════════════ */
+
+
+    /* ---------- INTERNAL CONSTANTS ---------- */
+    const DRAFT_KEY      = 'sarv_item_req_draft_v1';
+    const COUNTER_KEY    = 'sarv_item_req_counter_v1';
+    const SUBMITTED_KEY  = 'sarv_item_req_submitted_v1';
+    const PENDING_KEY    = 'sarv_pending_sync_queue_v1';
+    const UPDATED_BY_KEY = 'sarv_updated_by_v1';
+
+    // Detect if URL is set & valid
+    const URL_IS_CONFIGURED = (function(){
+        const u = String(APPS_SCRIPT_URL || '').trim();
+        if (!u) return false;
+        if (u === 'PASTE_YOUR_APPS_SCRIPT_URL_HERE') return false;
+        return /^https:\/\/script\.google\.com\/macros\/s\/[^\/]+\/exec/.test(u);
+    })();
+
+    let CURRENT_DETAIL = null;
+    let MASTER_ACTION_TYPE = null;
+
+    /* ---------- UTILITIES ---------- */
+    function $(id){ return document.getElementById(id); }
+
+    function showToast(msg, type='success', ms=3500){
+        const c = $('toastContainer');
+        const t = document.createElement('div');
+        t.className = 'toast ' + type;
+        t.innerHTML = msg;
+        c.appendChild(t);
+        setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateX(120%)'; }, ms-300);
+        setTimeout(()=> t.remove(), ms);
+    }
+
+    function pad(n,w=2){ return String(n).padStart(w,'0'); }
+    function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+
+    function generateReqNo(){
+        const d=new Date();
+        const ymd = d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate());
+        let counterData = {};
+        try { counterData = JSON.parse(localStorage.getItem(COUNTER_KEY) || '{}'); } catch(e){}
+        const next = (counterData[ymd] || 0) + 1;
+        return 'PR' + ymd + '-' + pad(next, 4);
+    }
+
+    function bumpCounter(){
+        const d=new Date();
+        const ymd = d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate());
+        let counterData = {};
+        try { counterData = JSON.parse(localStorage.getItem(COUNTER_KEY) || '{}'); } catch(e){}
+        counterData[ymd] = (counterData[ymd] || 0) + 1;
+        localStorage.setItem(COUNTER_KEY, JSON.stringify(counterData));
+    }
+
+    function escapeHtml(s){
+        return String(s||'')
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+
+    /* ---------- CLOCK ---------- */
+    function tickClock(){
+        const d=new Date();
+        $('liveClock').textContent =
+            pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+    }
+    setInterval(tickClock,1000); tickClock();
+
+    /* ---------- TAB SWITCHING ---------- */
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            const tab = link.dataset.tab;
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            link.classList.add('active');
+            $('tab-' + tab).classList.add('active');
+            if (tab === 'manage')  loadRequirementsList();
+            if (tab === 'po')      showPoSubPanel('pending');
+            if (tab === 'receive') loadReceivingPOs();
+            if (tab === 'summary') loadSummary();
+        });
+    });
+
+    /* ---------- BACKEND VERIFICATION ---------- */
+    async function verifyBackend(){
+        if (!URL_IS_CONFIGURED) {
+            $('syncStatus').innerHTML = 'NOT CONFIGURED';
+            $('syncStatus').className = 'sync-status offline';
+            $('setupBanner').style.display = 'block';
+            return;
+        }
+        const el = $('syncStatus');
+        el.textContent = 'CHECKING...'; el.className = 'sync-status checking';
+        try {
+            const res = await fetch(APPS_SCRIPT_URL, { method:'GET', redirect:'follow' });
+            const text = await res.text();
+            let json = null;
+            try { json = JSON.parse(text); } catch(e){}
+            if (json && json.ok){
+                el.innerHTML = '&#9679; SHEET ONLINE';
+                el.className = 'sync-status online';
+                showToast('&#9989; Connected: <b>'+escapeHtml(json.spreadsheet||'')+'</b>', 'success', 3500);
+            } else {
+                el.innerHTML = '&#9679; ERROR';
+                el.className = 'sync-status offline';
+                showToast('&#9888; Backend response invalid. Check Apps Script logs.', 'warn', 6000);
+            }
+        } catch(err){
+            el.innerHTML = '&#9679; OFFLINE';
+            el.className = 'sync-status offline';
+            showToast('&#10060; Cannot reach Apps Script: '+ err.message, 'error', 6000);
+        }
+    }
+
+    /* ---------- ITEM ROW (ENTRY TAB) ---------- */
+    const CATEGORIES = ['-- Select --','Raw Material - Yarn','Raw Material - Fabric','Raw Material - Dyes/Chemicals','Packing Material','Spare Parts','Consumables','Tools / Equipment','Stationery','Safety / PPE','Electrical','Other'];
+    const UOMS = ['Pcs','Kg','Gm','Mtr','Ltr','Box','Roll','Set','Bag','Pkt','Pair','Other'];
+
+    function buildCatOptions(selected){
+        return CATEGORIES.map(c => {
+            const v = (c === '-- Select --') ? '' : c;
+            const sel = (v === selected) ? 'selected' : '';
+            return '<option value="'+v+'" '+sel+'>'+c+'</option>';
+        }).join('');
+    }
+    function buildUomOptions(selected){
+        return UOMS.map(u => {
+            const sel = (u === selected) ? 'selected' : '';
+            return '<option value="'+u+'" '+sel+'>'+u+'</option>';
+        }).join('');
+    }
+
+    function addItemRow(data){
+        data = data || {};
+        const tbody = $('itemTableBody');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="sr-cell"></td>
+            <td><input type="text" class="table-input col-name" placeholder="Item Name" value="${escapeHtml(data.itemName||'')}"></td>
+            <td><input type="text" class="table-input col-desc" placeholder="Detailed spec / size / color" value="${escapeHtml(data.itemDesc||'')}"></td>
+            <td><input type="text" class="table-input col-make" placeholder="Make / Brand" value="${escapeHtml(data.make||'')}"></td>
+            <td><select class="table-select col-cat">${buildCatOptions(data.category||'')}</select></td>
+            <td><input type="number" class="table-input col-qty" placeholder="0" min="0" step="any" value="${data.qty||''}"></td>
+            <td><select class="table-select col-uom">${buildUomOptions(data.uom||'Pcs')}</select></td>
+            <td><input type="text" class="table-input col-rem" placeholder="optional note" value="${escapeHtml(data.remarks||'')}"></td>
+            <td style="text-align:center;"><button class="delete-row-btn" title="Remove">&times;</button></td>
+        `;
+        tbody.appendChild(tr);
+
+        tr.querySelector('.delete-row-btn').addEventListener('click', ()=>{
+            tr.remove();
+            refreshSerials();
+            recalcTotals();
+            saveDraft();
+        });
+        tr.querySelectorAll('input,select').forEach(el=>{
+            el.addEventListener('input', ()=>{ recalcTotals(); saveDraft(); });
+            el.addEventListener('change',()=>{ recalcTotals(); saveDraft(); });
+        });
+
+        refreshSerials();
+        recalcTotals();
+    }
+
+    function refreshSerials(){
+        document.querySelectorAll('#itemTableBody tr').forEach((tr,i)=>{
+            tr.querySelector('.sr-cell').textContent = (i+1);
+        });
+    }
+
+    function recalcTotals(){
+        const rows = document.querySelectorAll('#itemTableBody tr');
+        let totalQty = 0;
+        rows.forEach(r => totalQty += (parseFloat(r.querySelector('.col-qty').value) || 0));
+        $('totalItemCount').textContent = rows.length;
+        $('totalQty').textContent = totalQty.toLocaleString('en-IN');
+
+        const pri = $('priority').value;
+        const pill = $('urgentPill');
+        const badge = $('priorityBadge');
+        if (pri && pri !== 'Normal'){
+            pill.style.display = 'inline-flex';
+            badge.textContent = pri.toUpperCase();
+        } else { pill.style.display = 'none'; }
+    }
+
+    /* ---------- DRAFT ---------- */
+    function gatherFormData(){
+        const items = [];
+        document.querySelectorAll('#itemTableBody tr').forEach(r=>{
+            items.push({
+                itemName: r.querySelector('.col-name').value.trim(),
+                itemDesc: r.querySelector('.col-desc').value.trim(),
+                make:     r.querySelector('.col-make').value.trim(),
+                category: r.querySelector('.col-cat').value,
+                qty:      parseFloat(r.querySelector('.col-qty').value) || 0,
+                uom:      r.querySelector('.col-uom').value,
+                remarks:  r.querySelector('.col-rem').value.trim()
+            });
+        });
+        return {
+            reqNo:           $('reqNoField').value,
+            date:            $('reqDate').value,
+            requiredByDate:  $('requiredByDate').value,
+            priority:        $('priority').value,
+            personName:      $('reqPersonName').value.trim(),
+            empCode:         $('reqEmpCode').value.trim(),
+            designation:     $('reqDesignation').value.trim(),
+            department:      $('reqDepartment').value,
+            contact:         $('reqContact').value.trim(),
+            machine:         $('reqMachine').value.trim(),
+            purpose:         $('reqPurpose').value.trim(),
+            overallRemarks:  $('overallRemarks').value.trim(),
+            items:           items,
+            savedAt:         new Date().toISOString()
+        };
+    }
+
+    let draftTimer = null;
+    function saveDraft(){
+        clearTimeout(draftTimer);
+        draftTimer = setTimeout(()=>{
+            try {
+                const data = gatherFormData();
+                localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+                const t = new Date();
+                $('draftInfo').textContent =
+                    '💾 Draft auto-saved at ' + pad(t.getHours())+':'+pad(t.getMinutes())+':'+pad(t.getSeconds());
+            } catch(e){}
+        }, 400);
+    }
+
+    function loadDraft(){
+        try {
+            const raw = localStorage.getItem(DRAFT_KEY);
+            if (!raw) return false;
+            const d = JSON.parse(raw);
+            $('reqDate').value         = d.date || todayISO();
+            $('requiredByDate').value  = d.requiredByDate || todayISO();
+            $('priority').value        = d.priority || 'Normal';
+            $('reqPersonName').value   = d.personName || '';
+            $('reqEmpCode').value      = d.empCode || '';
+            $('reqDesignation').value  = d.designation || '';
+            $('reqDepartment').value   = d.department || '';
+            $('reqContact').value      = d.contact || '';
+            $('reqMachine').value      = d.machine || '';
+            $('reqPurpose').value      = d.purpose || '';
+            $('overallRemarks').value  = d.overallRemarks || '';
+
+            $('itemTableBody').innerHTML = '';
+            if (Array.isArray(d.items) && d.items.length){
+                d.items.forEach(it=> addItemRow(it));
+            } else { addItemRow(); }
+            $('draftInfo').textContent = '💾 Draft restored from previous session.';
+            return true;
+        } catch(e){ return false; }
+    }
+
+    /* ---------- VALIDATE & SUBMIT ---------- */
+    function validateForm(){
+        const required = [
+            ['reqDate','Date'],['requiredByDate','Required By Date'],
+            ['reqPersonName','Person Name'],['reqDepartment','Department'],
+            ['reqPurpose','Purpose / Reason']
+        ];
+        for (const [id,label] of required){
+            const el = $(id);
+            if (!el.value.toString().trim()){
+                showToast('&#9888; <b>'+label+'</b> is required.', 'warn', 4500);
+                el.focus();
+                el.style.borderColor = '#dc2626';
+                setTimeout(()=> el.style.borderColor='', 2500);
+                return false;
+            }
+        }
+        const d1 = $('reqDate').value, d2 = $('requiredByDate').value;
+        if (d1 && d2 && d2 < d1){
+            showToast('&#9888; Required By Date cannot be before Request Date.', 'warn', 5000);
+            $('requiredByDate').focus();
+            return false;
+        }
+        const contact = $('reqContact').value.trim();
+        if (contact && !/^[0-9+\-\s]{7,15}$/.test(contact)){
+            showToast('&#9888; Contact number looks invalid.', 'warn', 4000);
+            return false;
+        }
+        const rows = document.querySelectorAll('#itemTableBody tr');
+        if (rows.length === 0){ showToast('&#9888; Add at least one item.', 'warn'); return false; }
+        let hasValid = false, invalidRow = -1;
+        for (let i=0;i<rows.length;i++){
+            const r = rows[i];
+            const nm = r.querySelector('.col-name').value.trim();
+            const qy = parseFloat(r.querySelector('.col-qty').value) || 0;
+            const isBlank = !nm && !qy && !r.querySelector('.col-desc').value.trim();
+            if (!isBlank){
+                if (nm && qy > 0){ hasValid = true; }
+                else if (invalidRow === -1){ invalidRow = i+1; }
+            }
+        }
+        if (!hasValid){
+            showToast('&#9888; At least one item must have Item Name and Qty &gt; 0.', 'warn', 5500);
+            return false;
+        }
+        if (invalidRow !== -1){
+            showToast('&#9888; Row #'+invalidRow+' is partially filled.', 'warn', 5500);
+            return false;
+        }
+        return true;
+    }
+
+    function buildModalSummary(d){
+        const validItems = d.items.filter(it => it.itemName && it.qty > 0);
+        const lines = [
+            ['Requirement No.', d.reqNo],['Request Date', d.date],
+            ['Required By', d.requiredByDate],['Priority', d.priority],
+            ['Person', d.personName + (d.empCode ? ' ('+d.empCode+')' : '')],
+            ['Department', d.department + (d.designation ? ' / '+d.designation : '')],
+            ['Purpose', d.purpose],['Total Items', validItems.length],
+            ['Total Qty', validItems.reduce((s,it)=>s+it.qty,0).toLocaleString('en-IN')]
+        ];
+        return lines.map(([l,v])=>
+            '<div class="row"><span class="lbl">'+escapeHtml(l)+'</span><span class="val">'+escapeHtml(String(v||'-'))+'</span></div>'
+        ).join('');
+    }
+
+    function openConfirmModal(){
+        $('modalSummary').innerHTML = buildModalSummary(gatherFormData());
+        $('confirmModal').classList.add('active');
+    }
+    function closeConfirmModal(){ $('confirmModal').classList.remove('active'); }
+
+    function showSyncOverlay(msg){ $('syncMsg').textContent = msg || 'Syncing...'; $('syncOverlay').classList.add('active'); }
+    function hideSyncOverlay(){ $('syncOverlay').classList.remove('active'); }
+
+    /* ---------- PDF PRINT HELPER ----------
+       Drive file URL pattern:  https://drive.google.com/file/d/FILE_ID/view?usp=drivesdk
+       For direct print preview we open the Drive preview which has a Print button,
+       AND we attempt to auto-trigger print using window.print() on a hidden iframe
+       fallback. Browser may block popup - so we also offer a clickable toast link. */
+    function driveFileIdFromUrl(url){
+        if (!url) return '';
+        const m = String(url).match(/\/d\/([a-zA-Z0-9_-]+)/);
+        return m ? m[1] : '';
+    }
+    function openPdfForPrint(pdfUrl, reqNo){
+        if (!pdfUrl) return;
+        const fileId = driveFileIdFromUrl(pdfUrl);
+        // Drive 'preview' page allows inline view + has a built-in print button.
+        const previewUrl = fileId
+            ? 'https://drive.google.com/file/d/' + fileId + '/view'
+            : pdfUrl;
+        const win = window.open(previewUrl, '_blank', 'noopener');
+        if (!win) {
+            showToast('&#9888; Popup blocked. Click the PDF link in the toast to open <b>'+escapeHtml(reqNo||'')+'</b>.', 'warn', 9000);
+        }
+    }
+
+    /* ---------- CLOUD SYNC HELPER ---------- */
+    async function syncToCloud(payload){
+        if (!URL_IS_CONFIGURED) {
+            return { status:'ERROR', message:'Apps Script URL not configured in HTML file' };
+        }
+        const res = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST', mode: 'cors', redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body:   JSON.stringify(payload)
+        });
+        const text = await res.text();
+        try { return JSON.parse(text); }
+        catch(e){ return { status:'ERROR', message:'Invalid server response: '+text.slice(0,150) }; }
+    }
+
+    function queuePending(data){
+        let q = [];
+        try { q = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]'); } catch(e){}
+        q.push(data);
+        localStorage.setItem(PENDING_KEY, JSON.stringify(q));
+    }
+    async function flushPendingQueue(){
+        let q = [];
+        try { q = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]'); } catch(e){}
+        if (!q.length || !URL_IS_CONFIGURED) return;
+        showToast('🔄 Retrying '+q.length+' pending submission(s)...', 'success', 3000);
+        const remaining = [];
+        for (const item of q){
+            try { const r = await syncToCloud(item); if (r.status !== 'OK' && r.status !== 'DUPLICATE') remaining.push(item); }
+            catch(e){ remaining.push(item); }
+        }
+        localStorage.setItem(PENDING_KEY, JSON.stringify(remaining));
+        if (remaining.length === 0) showToast('&#9989; All pending synced!', 'success', 4000);
+    }
+
+    async function doSubmit(){
+        const data = gatherFormData();
+        data.items = data.items.filter(it => it.itemName && it.qty > 0);
+        data.action = 'save';
+
+        let log = [];
+        try { log = JSON.parse(localStorage.getItem(SUBMITTED_KEY) || '[]'); } catch(e){}
+        log.push(data);
+        try { localStorage.setItem(SUBMITTED_KEY, JSON.stringify(log)); } catch(e){}
+
+        closeConfirmModal();
+
+        if (!URL_IS_CONFIGURED){
+            queuePending(data); bumpCounter();
+            showToast('&#9888; URL not configured - saved to local queue.', 'warn', 7000);
+            localStorage.removeItem(DRAFT_KEY);
+            resetForm(true);
+            return;
+        }
+
+        showSyncOverlay('Syncing to Google Sheets...');
+        try {
+            const result = await syncToCloud(data);
+            hideSyncOverlay();
+            if (result.status === 'OK'){
+                bumpCounter();
+                localStorage.removeItem(DRAFT_KEY);
+                const pdfMsg = result.pdfUrl
+                    ? ' &middot; <a href="'+result.pdfUrl+'" target="_blank" style="color:#7dd3fc;text-decoration:underline;font-weight:800;">📄 Open PDF</a>'
+                    : '';
+                showToast('&#9989; <b>'+data.reqNo+'</b> saved! Row '+result.savedRow+' &middot; '+result.itemsCount+' item(s).'+pdfMsg, 'success', 9000);
+                if (result.pdfUrl) openPdfForPrint(result.pdfUrl, data.reqNo);
+                resetForm(true);
+                flushPendingQueue();
+            } else if (result.status === 'DUPLICATE'){
+                showToast('&#9888; Duplicate: '+result.message, 'warn', 7000);
+            } else {
+                queuePending(data);
+                showToast('&#10060; Sync failed: '+(result.message||'Unknown'), 'error', 8000);
+            }
+        } catch(err){
+            hideSyncOverlay();
+            queuePending(data);
+            showToast('&#10060; Network error: '+err.message, 'error', 8000);
+        }
+    }
+
+    function exportCsv(){
+        if (!validateForm()) return;
+        const d = gatherFormData();
+        const validItems = d.items.filter(it => it.itemName && it.qty > 0);
+        const headerRows = [
+            ['SARV INDIA - Item Requirement'],
+            ['Requirement No.', d.reqNo],['Date', d.date],['Required By', d.requiredByDate],
+            ['Priority', d.priority],['Person Name', d.personName],['Employee Code', d.empCode],
+            ['Designation', d.designation],['Department', d.department],['Contact', d.contact],
+            ['Machine/Line', d.machine],['Purpose', d.purpose],['Overall Remarks', d.overallRemarks],
+            [],['Sr.','Item Name','Description','Make/Brand','Category','Qty','UOM','Remarks']
+        ];
+        const itemRows = validItems.map((it,i)=>([i+1, it.itemName, it.itemDesc, it.make, it.category, it.qty, it.uom, it.remarks]));
+        const all = headerRows.concat(itemRows);
+        const csv = all.map(row =>
+            row.map(cell => {
+                const s = String(cell == null ? '' : cell);
+                if (/[",\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+                return s;
+            }).join(',')
+        ).join('\r\n');
+        const blob = new Blob([ '\uFEFF' + csv ], { type: 'text/csv;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = d.reqNo + '_' + (d.personName||'requester').replace(/[^\w\-]+/g,'_') + '.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('&#128190; CSV exported.', 'success', 3000);
+    }
+
+    function resetForm(keepCounter){
+        $('reqDate').value        = todayISO();
+        $('requiredByDate').value = todayISO();
+        $('priority').value       = 'Normal';
+        ['reqPersonName','reqEmpCode','reqDesignation','reqContact','reqMachine','reqPurpose','overallRemarks']
+            .forEach(id=> $(id).value = '');
+        $('reqDepartment').value = '';
+        $('itemTableBody').innerHTML = '';
+        addItemRow();
+        $('reqNoField').value = generateReqNo();
+        $('draftInfo').textContent = keepCounter ? '✅ Last entry saved. Ready for next requirement.' : 'Form cleared.';
+        recalcTotals();
+    }
+
+    /* ================================================================
+       =============== MANAGE & UPDATE TAB FUNCTIONS ==================
+       ================================================================ */
+
+    async function loadRequirementsList(){
+        if (!URL_IS_CONFIGURED){
+            $('reqListBody').innerHTML = '<tr><td colspan="10" class="empty-state">⚠️ Apps Script URL HTML me configure nahi hai. Setup banner dekho.</td></tr>';
+            return;
+        }
+        showSyncOverlay('Loading requirements...');
+        try {
+            const payload = {
+                action:    'list',
+                search:    $('filterSearch').value.trim(),
+                status:    $('filterStatus').value,
+                department:$('filterDept').value,
+                priority:  $('filterPriority').value,
+                dateFrom:  $('filterFrom').value
+            };
+            const result = await syncToCloud(payload);
+            hideSyncOverlay();
+            if (result.status !== 'OK'){
+                showToast('&#10060; '+(result.message||'Load failed'), 'error', 6000);
+                $('reqListBody').innerHTML = '';
+                return;
+            }
+            renderRequirementsList(result.items || []);
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 6000);
+        }
+    }
+
+    function statusBadgeClass(status){
+        const s = String(status||'').toLowerCase();
+        if (s.includes('po'))         return 'badge-po';
+        if (s.includes('received') && s.includes('partial')) return 'badge-partial';
+        if (s === 'received')         return 'badge-fulfilled';
+        if (s === 'generated')        return 'badge-po';
+        if (s.includes('pending'))    return 'badge-pending';
+        if (s.includes('progress'))   return 'badge-progress';
+        if (s.includes('partial'))    return 'badge-partial';
+        if (s.includes('fulfilled') || s.includes('fully')) return 'badge-fulfilled';
+        if (s.includes('closed'))     return 'badge-closed';
+        if (s.includes('cancelled'))  return 'badge-cancelled';
+        return 'badge-pending';
+    }
+    function priorityBadgeClass(p){
+        const x = String(p||'').toLowerCase();
+        if (x === 'urgent')   return 'badge-urgent';
+        if (x === 'critical') return 'badge-critical';
+        return 'badge-normal';
+    }
+
+    function renderRequirementsList(items){
+        const tbody = $('reqListBody');
+        $('listCount').textContent = items.length;
+
+        let cP=0,cI=0,cF=0;
+        items.forEach(it=>{
+            const s = String(it.status||'').toLowerCase();
+            if (s.includes('pending')) cP++;
+            else if (s.includes('progress')) cI++;
+            else if (s.includes('fulfilled')) cF++;
+        });
+        $('cntPending').textContent = cP;
+        $('cntProgress').textContent = cI;
+        $('cntFulfilled').textContent = cF;
+        $('pillPending').style.display    = cP ? 'inline-flex' : 'none';
+        $('pillProgress').style.display   = cI ? 'inline-flex' : 'none';
+        $('pillFulfilled').style.display  = cF ? 'inline-flex' : 'none';
+
+        if (!items.length){
+            tbody.innerHTML = '<tr><td colspan="10" class="empty-state"><div class="ico">🔍</div>No requirements match filters</td></tr>';
+            return;
+        }
+        tbody.innerHTML = items.map(it => `
+            <tr class="req-row" data-reqno="${escapeHtml(it.reqNo)}">
+                <td><b style="color:#0284c7;">${escapeHtml(it.reqNo)}</b></td>
+                <td>${escapeHtml(it.date)}</td>
+                <td>${escapeHtml(it.personName)}<br><small style="color:#64748b;">${escapeHtml(it.empCode||'')}</small></td>
+                <td>${escapeHtml(it.department)}</td>
+                <td><small>${escapeHtml((it.purpose||'').slice(0,40))}${(it.purpose||'').length>40?'...':''}</small></td>
+                <td style="text-align:center;">${it.totalItems}</td>
+                <td style="text-align:center;">${(it.totalQty||0).toLocaleString('en-IN')}</td>
+                <td style="text-align:center;"><b>${(it.totalIssuedQty||0).toLocaleString('en-IN')}</b></td>
+                <td><span class="badge ${priorityBadgeClass(it.priority)}">${escapeHtml(it.priority||'Normal')}</span></td>
+                <td><span class="badge ${statusBadgeClass(it.status)}">${escapeHtml(it.status||'Pending')}</span></td>
+            </tr>
+        `).join('');
+
+        tbody.querySelectorAll('.req-row').forEach(tr => {
+            tr.addEventListener('click', () => {
+                tbody.querySelectorAll('.req-row').forEach(r => r.classList.remove('selected'));
+                tr.classList.add('selected');
+                loadRequirementDetail(tr.dataset.reqno);
+            });
+        });
+    }
+
+    async function loadRequirementDetail(reqNo){
+        if (!reqNo) return;
+        showSyncOverlay('Loading details...');
+        try {
+            const result = await syncToCloud({ action: 'detail', reqNo: reqNo });
+            hideSyncOverlay();
+            if (result.status !== 'OK'){
+                showToast('&#10060; '+(result.message||'Load failed'), 'error', 6000);
+                return;
+            }
+            CURRENT_DETAIL = result;
+            renderDetail(result);
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 6000);
+        }
+    }
+
+    function renderDetail(d){
+        $('detailPanel').style.display = 'block';
+        $('detailEmpty').style.display = 'none';
+        const m = d.master;
+        $('detailTitle').textContent = 'Requirement: ' + m.reqNo;
+        $('detailMasterStatus').innerHTML =
+            '<span class="badge '+statusBadgeClass(m.status)+'" style="padding:5px 12px; font-size:11px;">'+escapeHtml(m.status||'Pending')+'</span>';
+
+        $('detailGrid').innerHTML = `
+            <div class="field"><span class="lbl">Person</span><span class="val">${escapeHtml(m.personName)} ${m.empCode? '<small style=color:#64748b>('+escapeHtml(m.empCode)+')</small>':''}</span></div>
+            <div class="field"><span class="lbl">Department</span><span class="val">${escapeHtml(m.department||'-')}</span></div>
+            <div class="field"><span class="lbl">Designation</span><span class="val">${escapeHtml(m.designation||'-')}</span></div>
+            <div class="field"><span class="lbl">Contact</span><span class="val">${escapeHtml(m.contact||'-')}</span></div>
+            <div class="field"><span class="lbl">Request Date</span><span class="val">${escapeHtml(m.date||'-')}</span></div>
+            <div class="field"><span class="lbl">Required By</span><span class="val">${escapeHtml(m.requiredByDate||'-')}</span></div>
+            <div class="field"><span class="lbl">Priority</span><span class="val"><span class="badge ${priorityBadgeClass(m.priority)}">${escapeHtml(m.priority||'-')}</span></span></div>
+            <div class="field"><span class="lbl">Machine / Line</span><span class="val">${escapeHtml(m.machine||'-')}</span></div>
+            <div class="field" style="grid-column: span 2;"><span class="lbl">Purpose</span><span class="val">${escapeHtml(m.purpose||'-')}</span></div>
+            <div class="field"><span class="lbl">Total Qty / Issued</span><span class="val">${(m.totalQty||0).toLocaleString('en-IN')} / <b style="color:#047857;">${(m.totalIssuedQty||0).toLocaleString('en-IN')}</b></span></div>
+            <div class="field"><span class="lbl">Last Updated</span><span class="val"><small>${escapeHtml(m.lastUpdated||'-')} ${m.updatedBy? 'by '+escapeHtml(m.updatedBy):''}</small></span></div>
+            ${m.overallRemarks ? '<div class="field" style="grid-column: 1 / -1;"><span class="lbl">Overall Remarks</span><span class="val">'+escapeHtml(m.overallRemarks)+'</span></div>':''}
+            ${m.closeRemarks ? '<div class="field" style="grid-column: 1 / -1;"><span class="lbl">Close Remarks</span><span class="val" style="color:#b45309;">'+escapeHtml(m.closeRemarks)+'</span></div>':''}
+        `;
+
+        const tbody = $('detailItemsBody');
+        const items = d.items || [];
+        const masterClosed = (String(m.status) === 'Closed' || String(m.status) === 'Cancelled');
+
+        tbody.innerHTML = items.map(it => `
+            <tr data-srno="${it.srNo}" data-qtyreq="${it.qtyRequested}" data-poqty="${it.poQty||0}" data-rcvqty="${it.qtyReceived||0}">
+                <td class="sr-cell">${it.srNo}</td>
+                <td><b>${escapeHtml(it.itemName||'')}</b><br><small style="color:#64748b;">${escapeHtml(it.make||'')}</small></td>
+                <td><small>${escapeHtml(it.itemDesc||'')}</small></td>
+                <td style="text-align:center;"><b>${(it.qtyRequested||0).toLocaleString('en-IN')}</b></td>
+                <td style="text-align:center;">
+                    <input type="number" class="table-input col-issued-input col-issued" min="0" max="${it.qtyRequested}" step="any" value="${it.qtyIssued||0}" ${masterClosed?'disabled':''}>
+                </td>
+                <td style="text-align:center;background:#fef2f2;">
+                    <input type="number" class="table-input col-issued-input col-cancelled" min="0" max="${it.qtyRequested}" step="any" value="${it.qtyCancelled||0}" ${masterClosed?'disabled':''} style="background:#fef2f2;color:#b91c1c;font-weight:700;">
+                </td>
+                <td style="text-align:center;background:#dbeafe;color:#1d4ed8;font-weight:700;">${(it.poQty||0).toLocaleString('en-IN')}</td>
+                <td style="text-align:center;font-weight:800;color:#047857;" class="col-avail">${(it.qtyAvailable||0).toLocaleString('en-IN')}</td>
+                <td>${escapeHtml(it.uom||'')}</td>
+                <td>
+                    <select class="table-select col-itemstatus" disabled style="background:#f1f5f9;">
+                        <option value="Pending"          ${it.itemStatus==='Pending'?'selected':''}>⏳ Pending</option>
+                        <option value="PO Generated"     ${it.itemStatus==='PO Generated'?'selected':''}>🛒 PO Generated</option>
+                        <option value="Received"         ${it.itemStatus==='Received'?'selected':''}>📥 Received</option>
+                        <option value="Partially Issued" ${it.itemStatus==='Partially Issued'?'selected':''}>🟡 Partial</option>
+                        <option value="Fully Issued"     ${it.itemStatus==='Fully Issued'?'selected':''}>✅ Fully Issued</option>
+                        <option value="Cancelled"        ${it.itemStatus==='Cancelled'?'selected':''}>❌ Cancelled</option>
+                    </select>
+                    ${it.poNo ? '<small style="color:#1d4ed8;font-weight:700;display:block;margin-top:2px;">PO: '+escapeHtml(it.poNo)+'</small>' : ''}
+                </td>
+                <td><input type="text" class="table-input col-issrem" placeholder="optional" value="${escapeHtml(it.issueRemarks||'')}" ${masterClosed?'disabled':''}></td>
+                <td style="text-align:center;">
+                    ${it.issueDate ? '<small style="color:#64748b;" title="Issued: '+escapeHtml(it.issueDate)+' by '+escapeHtml(it.issuedBy||'')+'">📅</small>' : ''}
+                </td>
+            </tr>
+        `).join('');
+
+        // Auto-recompute Available + Status when Issued or Cancelled change
+        function recomputeRow(tr){
+            const qReq = Number(tr.dataset.qtyreq) || 0;
+            const qPo  = Number(tr.dataset.poqty)  || 0;
+            const qRcv = Number(tr.dataset.rcvqty) || 0;
+            let qIss   = Number(tr.querySelector('.col-issued').value)    || 0;
+            let qCan   = Number(tr.querySelector('.col-cancelled').value) || 0;
+            if (qIss < 0) qIss = 0;
+            if (qCan < 0) qCan = 0;
+            if (qIss + qCan > qReq) {
+                // clamp the most-recently-edited one if over
+                if (tr._lastEdited === 'cancel') { qCan = Math.max(0, qReq - qIss); tr.querySelector('.col-cancelled').value = qCan; }
+                else                              { qIss = Math.max(0, qReq - qCan); tr.querySelector('.col-issued').value    = qIss; }
+            }
+            const avail = Math.max(0, qReq - qIss - qCan - qPo);
+            tr.querySelector('.col-avail').textContent = avail.toLocaleString('en-IN');
+
+            // Compute display status (server is source of truth) - mirrors backend computeItemStatus_
+            const statusSel = tr.querySelector('.col-itemstatus');
+            let newSt = 'Pending';
+            if (qReq > 0 && qCan >= qReq)                                              newSt = 'Cancelled';
+            else if (qReq > 0 && qIss + qCan >= qReq)                                  newSt = (qIss === 0 ? 'Cancelled' : 'Fully Issued');
+            else if (qIss > 0)                                                         newSt = 'Partially Issued';
+            else if (qReq > 0 && qRcv > 0 && qRcv + qCan >= qReq)                      newSt = 'Received';
+            else if (qPo > 0)                                                          newSt = 'PO Generated';
+            statusSel.value = newSt;
+        }
+
+        tbody.querySelectorAll('tr').forEach(tr => {
+            const issuedInp = tr.querySelector('.col-issued');
+            const cancelInp = tr.querySelector('.col-cancelled');
+            issuedInp.addEventListener('input', () => { tr._lastEdited = 'issue';  recomputeRow(tr); });
+            cancelInp.addEventListener('input', () => { tr._lastEdited = 'cancel'; recomputeRow(tr); });
+        });
+
+        $('updatedByField').value = localStorage.getItem(UPDATED_BY_KEY) || '';
+
+        $('closeMasterBtn').disabled  = (String(m.status) === 'Closed');
+        $('cancelMasterBtn').disabled = (String(m.status) === 'Cancelled');
+        $('saveAllItemsBtn').disabled = masterClosed;
+
+        const hasPdf = !!(m.pdfLink && /^https?:\/\//i.test(m.pdfLink));
+        $('openPdfBtn').disabled  = !hasPdf;
+        $('openPdfBtn').title     = hasPdf ? 'Open PDF for printing' : 'No PDF available - click Regen PDF';
+        $('regenPdfBtn').disabled = false;
+    }
+
+    async function openCurrentPdf(){
+        if (!CURRENT_DETAIL || !CURRENT_DETAIL.master) return;
+        const url = CURRENT_DETAIL.master.pdfLink;
+        if (!url) { showToast('&#9888; No PDF yet. Click Regen PDF first.', 'warn', 4000); return; }
+        openPdfForPrint(url, CURRENT_DETAIL.master.reqNo);
+    }
+
+    async function regenerateCurrentPdf(){
+        if (!CURRENT_DETAIL || !CURRENT_DETAIL.master) return;
+        showSyncOverlay('Regenerating PDF...');
+        try {
+            const result = await syncToCloud({
+                action: 'regeneratePdf',
+                reqNo:  CURRENT_DETAIL.master.reqNo
+            });
+            hideSyncOverlay();
+            if (result.status === 'OK' && result.pdfUrl){
+                showToast('&#9989; PDF regenerated. <a href="'+result.pdfUrl+'" target="_blank" style="color:#7dd3fc;text-decoration:underline;font-weight:800;">📄 Open</a>', 'success', 8000);
+                openPdfForPrint(result.pdfUrl, CURRENT_DETAIL.master.reqNo);
+                await loadRequirementDetail(CURRENT_DETAIL.master.reqNo);
+            } else {
+                showToast('&#10060; '+(result.message||'PDF regen failed'), 'error', 6000);
+            }
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 6000);
+        }
+    }
+
+    async function saveAllItemChanges(){
+        if (!CURRENT_DETAIL) return;
+        const updatedBy = $('updatedByField').value.trim();
+        if (!updatedBy){
+            showToast('&#9888; Please enter your name (Issued By) before saving.', 'warn', 4500);
+            $('updatedByField').focus();
+            return;
+        }
+        localStorage.setItem(UPDATED_BY_KEY, updatedBy);
+
+        const updates = [];
+        document.querySelectorAll('#detailItemsBody tr').forEach(tr => {
+            const srNo         = Number(tr.dataset.srno);
+            const newStatus    = tr.querySelector('.col-itemstatus').value;
+            const newIssued    = Number(tr.querySelector('.col-issued').value)    || 0;
+            const newCancelled = Number(tr.querySelector('.col-cancelled').value) || 0;
+            const newRem       = tr.querySelector('.col-issrem').value.trim();
+
+            const original = CURRENT_DETAIL.items.find(x => x.srNo === srNo);
+            if (!original) return;
+            const changed =
+                (Number(original.qtyIssued)    !== newIssued) ||
+                (Number(original.qtyCancelled) !== newCancelled) ||
+                ((original.issueRemarks||'')   !== newRem);
+            if (changed){
+                updates.push({ srNo, newStatus, qtyIssued: newIssued, qtyCancelled: newCancelled, issueRemarks: newRem });
+            }
+        });
+
+        if (updates.length === 0){
+            showToast('No changes to save.', 'warn', 3000);
+            return;
+        }
+
+        showSyncOverlay('Updating '+updates.length+' item(s)...');
+        try {
+            const result = await syncToCloud({
+                action: 'bulkUpdateItems',
+                reqNo:  CURRENT_DETAIL.master.reqNo,
+                updatedBy: updatedBy,
+                items: updates
+            });
+            hideSyncOverlay();
+
+            if (result.status === 'OK' || result.status === 'PARTIAL'){
+                showToast(
+                    (result.status === 'OK' ? '&#9989;' : '&#9888;') + ' ' + result.message +
+                    ' &middot; Master status: <b>'+result.masterStatus+'</b>',
+                    result.status === 'OK' ? 'success' : 'warn', 5500
+                );
+                await loadRequirementDetail(CURRENT_DETAIL.master.reqNo);
+                await loadRequirementsList();
+            } else {
+                showToast('&#10060; '+(result.message||'Update failed'), 'error', 6000);
+            }
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 6000);
+        }
+    }
+
+    function openMasterActionModal(type){
+        if (!CURRENT_DETAIL) return;
+        MASTER_ACTION_TYPE = type;
+        if (type === 'close'){
+            $('masterActionTitle').innerHTML = '&#128274; Mark Requirement as Closed';
+            $('masterActionSub').textContent = 'Closes Req ' + CURRENT_DETAIL.master.reqNo + '. No further item updates will be possible.';
+        } else {
+            $('masterActionTitle').innerHTML = '&#10060; Cancel Requirement';
+            $('masterActionSub').textContent = 'Cancels Req ' + CURRENT_DETAIL.master.reqNo + '. All items will be marked cancelled.';
+        }
+        $('masterActionRemarks').value = '';
+        $('masterActionBy').value = localStorage.getItem(UPDATED_BY_KEY) || '';
+        $('masterActionModal').classList.add('active');
+    }
+    function closeMasterActionModal(){ $('masterActionModal').classList.remove('active'); }
+
+    async function confirmMasterAction(){
+        if (!CURRENT_DETAIL || !MASTER_ACTION_TYPE) return;
+        const remarks   = $('masterActionRemarks').value.trim();
+        const updatedBy = $('masterActionBy').value.trim();
+        if (!remarks){
+            showToast('&#9888; Remarks required.', 'warn', 3500);
+            $('masterActionRemarks').focus();
+            return;
+        }
+        if (!updatedBy){
+            showToast('&#9888; Your name required.', 'warn', 3500);
+            $('masterActionBy').focus();
+            return;
+        }
+        localStorage.setItem(UPDATED_BY_KEY, updatedBy);
+
+        const newStatus = (MASTER_ACTION_TYPE === 'close') ? 'Closed' : 'Cancelled';
+        closeMasterActionModal();
+        showSyncOverlay(newStatus === 'Closed' ? 'Closing requirement...' : 'Cancelling requirement...');
+        try {
+            const result = await syncToCloud({
+                action: 'updateMasterStatus',
+                reqNo:  CURRENT_DETAIL.master.reqNo,
+                newStatus,
+                closeRemarks: remarks,
+                updatedBy
+            });
+            hideSyncOverlay();
+            if (result.status === 'OK'){
+                showToast('&#9989; Marked '+newStatus, 'success', 4500);
+                await loadRequirementDetail(CURRENT_DETAIL.master.reqNo);
+                await loadRequirementsList();
+            } else {
+                showToast('&#10060; '+(result.message||'Action failed'), 'error', 6000);
+            }
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 6000);
+        }
+    }
+
+    /* ================================================================
+       =============== PURCHASE ORDER (PO) TAB FUNCTIONS ==============
+       ================================================================ */
+
+    let PO_PENDING_CACHE = [];   // last fetched pending items
+    let PO_SELECTED = new Map(); // key: reqNo|srNo -> item
+    let PO_CURRENT_BUILD = [];   // items currently in PO build modal
+
+    function poKey(it){ return it.reqNo + '|' + it.srNo; }
+    function fmtMoney(n){
+        const x = Number(n) || 0;
+        return x.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function showPoSubPanel(which){
+        $('poPendingPanel').style.display = (which === 'pending') ? 'block' : 'none';
+        $('poListPanel').style.display    = (which === 'list')    ? 'block' : 'none';
+        if (which === 'pending') {
+            $('poSubPendingBtn').className = 'btn btn-primary btn-sm';
+            $('poSubListBtn').className    = 'btn btn-neutral btn-sm';
+            loadPoPending();
+        } else {
+            $('poSubPendingBtn').className = 'btn btn-neutral btn-sm';
+            $('poSubListBtn').className    = 'btn btn-primary btn-sm';
+            loadPoList();
+        }
+    }
+
+    async function loadPoPending(){
+        if (!URL_IS_CONFIGURED){
+            $('poPendingBody').innerHTML = '<tr><td colspan="15" class="empty-state">⚠️ Apps Script URL configured nahi hai.</td></tr>';
+            return;
+        }
+        showSyncOverlay('Loading pending items...');
+        try {
+            const result = await syncToCloud({
+                action: 'listPendingForPO',
+                search:    $('poFilterSearch').value.trim(),
+                department:$('poFilterDept').value,
+                priority:  $('poFilterPriority').value,
+                reqNo:     $('poFilterReqNo').value.trim()
+            });
+            hideSyncOverlay();
+            if (result.status !== 'OK'){
+                showToast('&#10060; '+(result.message||'Load failed'), 'error', 6000);
+                $('poPendingBody').innerHTML = '';
+                return;
+            }
+            PO_PENDING_CACHE = result.items || [];
+            renderPoPending();
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 6000);
+        }
+    }
+
+    function renderPoPending(){
+        const tbody = $('poPendingBody');
+        const items = PO_PENDING_CACHE;
+        $('poPendingCount').textContent = items.length;
+        if (!items.length){
+            tbody.innerHTML = '<tr><td colspan="15" class="empty-state"><div class="ico">📦</div>No items with available qty for PO</td></tr>';
+            recalcPoSelection();
+            return;
+        }
+        tbody.innerHTML = items.map(it => {
+            const k = poKey(it);
+            const checked = PO_SELECTED.has(k) ? 'checked' : '';
+            const sel = PO_SELECTED.has(k) ? 'selected' : '';
+            const z = (n) => n === 0 ? '<small style="color:#94a3b8;">0</small>' : (n||0).toLocaleString('en-IN');
+            return `
+            <tr class="po-row ${sel}" data-key="${escapeHtml(k)}">
+                <td style="text-align:center;"><input type="checkbox" class="po-check" ${checked}></td>
+                <td><b style="color:#0284c7;">${escapeHtml(it.reqNo)}</b></td>
+                <td style="text-align:center;">${it.srNo}</td>
+                <td class="po-itemcell"><b>${escapeHtml(it.itemName||'')}</b></td>
+                <td class="po-itemcell"><small style="color:#64748b;">${escapeHtml((it.itemDesc||'').slice(0,40))}</small></td>
+                <td>${escapeHtml(it.make||'')}</td>
+                <td>${escapeHtml(it.department||'')}</td>
+                <td style="text-align:center;">${z(it.qtyRequested)}</td>
+                <td style="text-align:center;">${z(it.qtyIssued)}</td>
+                <td style="text-align:center;">${z(it.qtyCancelled)}</td>
+                <td style="text-align:center;">${z(it.qtyPoExisting)}</td>
+                <td style="text-align:center;background:#dbeafe;color:#1d4ed8;font-weight:800;">${(it.qtyAvailable||0).toLocaleString('en-IN')}</td>
+                <td>${escapeHtml(it.uom||'')}</td>
+                <td><span class="badge ${statusBadgeClass(it.itemStatus||'Pending')}" style="font-size:9px;">${escapeHtml(it.itemStatus||'Pending')}</span></td>
+                <td><span class="badge ${priorityBadgeClass(it.priority)}">${escapeHtml(it.priority||'Normal')}</span></td>
+            </tr>`;
+        }).join('');
+
+        tbody.querySelectorAll('.po-row').forEach(tr => {
+            const cb = tr.querySelector('.po-check');
+            const k = tr.dataset.key;
+            const it = items.find(x => poKey(x) === k);
+            cb.addEventListener('change', (e) => {
+                e.stopPropagation();
+                if (cb.checked) { PO_SELECTED.set(k, it); tr.classList.add('selected'); }
+                else            { PO_SELECTED.delete(k);  tr.classList.remove('selected'); }
+                recalcPoSelection();
+            });
+            tr.addEventListener('click', (e) => {
+                if (e.target.tagName === 'INPUT') return;
+                cb.checked = !cb.checked;
+                cb.dispatchEvent(new Event('change'));
+            });
+        });
+        recalcPoSelection();
+    }
+
+    function recalcPoSelection(){
+        const n = PO_SELECTED.size;
+        let q = 0;
+        PO_SELECTED.forEach(it => q += (Number(it.qtyAvailable) || 0));
+        $('poSelCount').textContent  = n;
+        $('poSelCount2').textContent = n;
+        $('poSelQty').textContent    = q.toLocaleString('en-IN');
+        $('poBuildBtn').disabled = (n === 0);
+    }
+
+    function clearPoSelection(){
+        PO_SELECTED.clear();
+        document.querySelectorAll('#poPendingBody .po-check').forEach(c => c.checked = false);
+        document.querySelectorAll('#poPendingBody .po-row').forEach(r => r.classList.remove('selected'));
+        $('poSelectAll').checked = false;
+        recalcPoSelection();
+    }
+
+    async function openPoBuildModal(){
+        if (PO_SELECTED.size === 0) return;
+        PO_CURRENT_BUILD = Array.from(PO_SELECTED.values());
+
+        // Fetch next PO No (best-effort; falls back to client-side if backend silent)
+        let poNo = '';
+        try {
+            const r = await syncToCloud({ action: 'nextPONo' });
+            if (r && r.status === 'OK') poNo = r.poNo;
+        } catch(e){}
+        if (!poNo) poNo = 'PO/U-2/' + String(Date.now()).slice(-4);
+
+        $('poNoField').value          = poNo;
+        $('poDateField').value        = todayISO();
+        $('poDeliveryField').value    = '';
+        $('poCreatedByField').value   = localStorage.getItem(UPDATED_BY_KEY) || '';
+        $('poVendorField').value      = '';
+        $('poVendorGstField').value   = '';
+        $('poVendorContactField').value = '';
+        $('poVendorAddressField').value = '';
+        $('poPaymentTermsField').value  = 'Payment terms 90 days after receipt of bill';
+        $('poGstPctField').value        = 18;
+        $('poFreightField').value       = 0;
+        $('poOtherLabelField').value    = 'Other Expense';
+        $('poOtherExpField').value      = 0;
+        $('poNotesField').value         = '';
+
+        renderPoBuildItems();
+        recalcPoBuildTotals();
+        $('poBuildModal').classList.add('active');
+    }
+
+    function closePoBuildModal(){
+        $('poBuildModal').classList.remove('active');
+    }
+
+    function renderPoBuildItems(){
+        const tbody = $('poBuildBody');
+        tbody.innerHTML = PO_CURRENT_BUILD.map((it,i) => `
+            <tr data-idx="${i}">
+                <td style="text-align:center;font-weight:700;">${i+1}</td>
+                <td><b style="color:#0284c7;font-size:11px;">${escapeHtml(it.reqNo)}</b><br><small>Sr ${it.srNo}</small></td>
+                <td><b>${escapeHtml(it.itemName||'')}</b></td>
+                <td><small style="color:#64748b;">${escapeHtml(it.itemDesc||'')}</small></td>
+                <td>${escapeHtml(it.make||'')}</td>
+                <td style="text-align:center;"><b>${(it.qtyAvailable||0).toLocaleString('en-IN')}</b></td>
+                <td><input type="number" class="po-itemqty" min="0" max="${it.qtyAvailable||0}" step="any" value="${it.qtyAvailable||0}" style="background:#dbeafe;font-weight:700;"></td>
+                <td>${escapeHtml(it.uom||'')}</td>
+                <td><input type="number" class="po-unitprice" min="0" step="0.01" value="0" placeholder="0.00"></td>
+                <td class="po-total" data-total="0">0.00</td>
+            </tr>
+        `).join('');
+
+        tbody.querySelectorAll('tr').forEach(tr => {
+            const idx = Number(tr.dataset.idx);
+            const it = PO_CURRENT_BUILD[idx];
+            const qtyInp = tr.querySelector('.po-itemqty');
+            const upInp  = tr.querySelector('.po-unitprice');
+            const tot    = tr.querySelector('.po-total');
+            const recalc = () => {
+                const avail = Number(it.qtyAvailable) || 0;
+                let qty = Number(qtyInp.value) || 0;
+                if (qty < 0) qty = 0;
+                if (qty > avail) { qty = avail; qtyInp.value = avail; }
+                const up = Number(upInp.value) || 0;
+                const total = up * qty;
+                tot.textContent = fmtMoney(total);
+                tot.dataset.total = total;
+                tr.dataset.poqty = qty;
+                recalcPoBuildTotals();
+            };
+            qtyInp.addEventListener('input', recalc);
+            upInp.addEventListener('input', recalc);
+            tr.dataset.poqty = (Number(qtyInp.value) || 0);
+        });
+    }
+
+    function recalcPoBuildTotals(){
+        let subtotal = 0;
+        document.querySelectorAll('#poBuildBody tr').forEach(tr => {
+            subtotal += Number(tr.querySelector('.po-total').dataset.total) || 0;
+        });
+        const gstPct = Number($('poGstPctField').value) || 0;
+        const gstAmt = subtotal * gstPct / 100;
+        const freight = Number($('poFreightField').value) || 0;
+        const other   = Number($('poOtherExpField').value) || 0;
+        const grand   = subtotal + gstAmt + freight + other;
+
+        $('poSubtotalView').textContent = fmtMoney(subtotal);
+        $('poGstAmtView').textContent   = fmtMoney(gstAmt);
+        $('poFreightView').textContent  = fmtMoney(freight);
+        $('poOtherView').textContent    = fmtMoney(other);
+        $('poOtherViewLbl').textContent = $('poOtherLabelField').value || 'Other';
+        $('poGrandTotalView').textContent = fmtMoney(grand);
+    }
+
+    async function confirmPoBuild(){
+        const vendor = $('poVendorField').value.trim();
+        if (!vendor){ showToast('&#9888; Vendor (M/s) required.', 'warn', 4000); $('poVendorField').focus(); return; }
+        const poDate = $('poDateField').value;
+        if (!poDate){ showToast('&#9888; PO Date required.', 'warn', 4000); $('poDateField').focus(); return; }
+
+        const items = [];
+        let allPriced = true, allHaveQty = true;
+        document.querySelectorAll('#poBuildBody tr').forEach(tr => {
+            const idx = Number(tr.dataset.idx);
+            const it = PO_CURRENT_BUILD[idx];
+            const up    = Number(tr.querySelector('.po-unitprice').value) || 0;
+            const poQty = Number(tr.querySelector('.po-itemqty').value)  || 0;
+            if (up <= 0)    allPriced = false;
+            if (poQty <= 0) allHaveQty = false;
+            items.push({ reqNo: it.reqNo, srNo: it.srNo, unitPrice: up, poQty: poQty });
+        });
+        if (!allHaveQty){
+            showToast('&#9888; One or more items have PO Qty = 0. Set qty before generating.', 'warn', 5000);
+            return;
+        }
+        if (!allPriced){
+            if (!confirm('Some items have Unit Price = 0. Continue with zero prices?')) return;
+        }
+
+        const createdBy = $('poCreatedByField').value.trim();
+        if (createdBy) localStorage.setItem(UPDATED_BY_KEY, createdBy);
+
+        const payload = {
+            action: 'generatePO',
+            poNo:           $('poNoField').value.trim(),
+            poDate:         poDate,
+            deliveryDate:   $('poDeliveryField').value,
+            vendorName:     vendor,
+            vendorGst:      $('poVendorGstField').value.trim(),
+            vendorAddress:  $('poVendorAddressField').value.trim(),
+            vendorContact:  $('poVendorContactField').value.trim(),
+            paymentTerms:   $('poPaymentTermsField').value.trim(),
+            gstPercent:     Number($('poGstPctField').value) || 0,
+            freight:        Number($('poFreightField').value) || 0,
+            otherExpense:   Number($('poOtherExpField').value) || 0,
+            otherExpenseLabel: $('poOtherLabelField').value.trim() || 'Other Expense',
+            importantNotes: $('poNotesField').value.trim(),
+            createdBy:      createdBy,
+            items:          items
+        };
+
+        showSyncOverlay('Generating PO + PDF...');
+        try {
+            const result = await syncToCloud(payload);
+            hideSyncOverlay();
+            if (result.status === 'OK'){
+                closePoBuildModal();
+                const pdfMsg = result.pdfUrl
+                    ? ' &middot; <a href="'+result.pdfUrl+'" target="_blank" style="color:#7dd3fc;text-decoration:underline;font-weight:800;">📄 Open PO PDF</a>'
+                    : '';
+                showToast('&#9989; <b>'+result.poNo+'</b> generated! Grand Total: <b>₹'+fmtMoney(result.grandTotal)+'</b>'+pdfMsg, 'success', 10000);
+                if (result.pdfUrl) openPdfForPrint(result.pdfUrl, result.poNo);
+                clearPoSelection();
+                loadPoPending();
+            } else if (result.status === 'DUPLICATE'){
+                showToast('&#9888; '+result.message, 'warn', 7000);
+            } else {
+                showToast('&#10060; '+(result.message||'PO generation failed'), 'error', 8000);
+            }
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 8000);
+        }
+    }
+
+    /* ---- PO List sub-panel ---- */
+    async function loadPoList(){
+        if (!URL_IS_CONFIGURED){
+            $('poListBody').innerHTML = '<tr><td colspan="9" class="empty-state">⚠️ URL not configured.</td></tr>';
+            return;
+        }
+        showSyncOverlay('Loading POs...');
+        try {
+            const result = await syncToCloud({
+                action: 'listPOs',
+                search: $('poListSearch').value.trim(),
+                status: $('poListStatus').value
+            });
+            hideSyncOverlay();
+            if (result.status !== 'OK'){
+                showToast('&#10060; '+(result.message||'Load failed'), 'error', 6000);
+                return;
+            }
+            renderPoList(result.items || []);
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 6000);
+        }
+    }
+
+    function renderPoList(items){
+        $('poListCount').textContent = items.length;
+        const tbody = $('poListBody');
+        if (!items.length){
+            tbody.innerHTML = '<tr><td colspan="9" class="empty-state"><div class="ico">📜</div>No POs found</td></tr>';
+            return;
+        }
+        tbody.innerHTML = items.map(it => `
+            <tr>
+                <td><b style="color:#0284c7;">${escapeHtml(it.poNo)}</b></td>
+                <td>${escapeHtml(it.poDate||'')}</td>
+                <td><b>${escapeHtml(it.vendorName||'')}</b>${it.vendorGst?'<br><small style="color:#64748b;">'+escapeHtml(it.vendorGst)+'</small>':''}</td>
+                <td><small>${escapeHtml(it.linkedReqNos||'')}</small></td>
+                <td style="text-align:center;">${it.totalItems}</td>
+                <td style="text-align:center;">${(it.totalQty||0).toLocaleString('en-IN')}</td>
+                <td style="text-align:right;font-weight:700;">₹ ${fmtMoney(it.grandTotal)}</td>
+                <td><span class="badge ${statusBadgeClass(it.status)}">${escapeHtml(it.status||'Generated')}</span></td>
+                <td>${it.pdfLink?'<a href="'+escapeHtml(it.pdfLink)+'" target="_blank" style="color:#0284c7;text-decoration:underline;font-weight:700;">📄 PDF</a>':'<small style="color:#94a3b8;">No PDF</small>'}</td>
+            </tr>
+        `).join('');
+    }
+
+    /* ================================================================
+       =============== RECEIVING TAB FUNCTIONS ========================
+       ================================================================ */
+    let REC_POS_CACHE = [];
+    let REC_CURRENT_PO = null;
+
+    async function loadReceivingPOs(){
+        if (!URL_IS_CONFIGURED){
+            $('recPoBody').innerHTML = '<tr><td colspan="11" class="empty-state">⚠️ URL not configured.</td></tr>';
+            return;
+        }
+        showSyncOverlay('Loading open POs...');
+        try {
+            const result = await syncToCloud({
+                action: 'listPOsForReceiving',
+                search:     $('recFilterSearch').value.trim(),
+                status:     $('recFilterStatus').value,
+                poDateFrom: $('recFilterPoDateFrom').value,
+                poDateTo:   $('recFilterPoDateTo').value
+            });
+            hideSyncOverlay();
+            if (result.status !== 'OK'){
+                showToast('&#10060; '+(result.message||'Load failed'), 'error', 6000);
+                return;
+            }
+            REC_POS_CACHE = result.items || [];
+            renderReceivingPOs();
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 6000);
+        }
+    }
+
+    function renderReceivingPOs(){
+        const tbody = $('recPoBody');
+        const items = REC_POS_CACHE;
+        $('recPoCount').textContent = items.length;
+        let totOrd=0, totRcv=0, totPnd=0;
+        items.forEach(po => {
+            totOrd += Number(po.totalOrdered)  || 0;
+            totRcv += Number(po.totalReceived) || 0;
+            totPnd += Number(po.totalPending)  || 0;
+        });
+        $('recTotOrd').textContent = totOrd.toLocaleString('en-IN');
+        $('recTotRcv').textContent = totRcv.toLocaleString('en-IN');
+        $('recTotPnd').textContent = totPnd.toLocaleString('en-IN');
+
+        if (!items.length){
+            tbody.innerHTML = '<tr><td colspan="11" class="empty-state"><div class="ico">📥</div>No open POs to receive</td></tr>';
+            return;
+        }
+        tbody.innerHTML = items.map(po => `
+            <tr>
+                <td><b style="color:#0284c7;">${escapeHtml(po.poNo)}</b></td>
+                <td>${escapeHtml(po.poDate||'')}</td>
+                <td><b>${escapeHtml(po.vendorName||'')}</b>${po.vendorGst?'<br><small style="color:#64748b;">'+escapeHtml(po.vendorGst)+'</small>':''}</td>
+                <td><small>${escapeHtml(po.linkedReqNos||'')}</small></td>
+                <td style="text-align:center;">${po.totalItems}</td>
+                <td style="text-align:center;"><b>${po.pendingItems}</b></td>
+                <td style="text-align:center;">${(po.totalOrdered||0).toLocaleString('en-IN')}</td>
+                <td style="text-align:center;color:#047857;font-weight:700;">${(po.totalReceived||0).toLocaleString('en-IN')}</td>
+                <td style="text-align:center;background:#fef3c7;color:#b45309;font-weight:800;">${(po.totalPending||0).toLocaleString('en-IN')}</td>
+                <td><span class="badge ${statusBadgeClass(po.status)}">${escapeHtml(po.status||'Generated')}</span></td>
+                <td style="text-align:center;"><button class="btn btn-success btn-sm rec-open-btn" data-pono="${escapeHtml(po.poNo)}">📥 Receive</button></td>
+            </tr>
+        `).join('');
+
+        tbody.querySelectorAll('.rec-open-btn').forEach(btn => {
+            btn.addEventListener('click', () => openReceiveModal(btn.dataset.pono));
+        });
+    }
+
+    function openReceiveModal(poNo){
+        const po = REC_POS_CACHE.find(x => x.poNo === poNo);
+        if (!po) { showToast('&#9888; PO not in cache.', 'warn', 3000); return; }
+        REC_CURRENT_PO = po;
+
+        $('receiveModalSub').textContent = 'PO: ' + po.poNo + ' · Vendor: ' + po.vendorName;
+        $('rcvPoNoField').value     = po.poNo;
+        $('rcvVendorField').value   = po.vendorName || '';
+        $('rcvDateField').value     = todayISO();
+        $('rcvByField').value       = localStorage.getItem(UPDATED_BY_KEY) || '';
+        $('rcvGpField').value       = '';
+        $('rcvRemarksField').value  = '';
+
+        renderRcvBuildItems();
+        recalcRcvTotals();
+        $('receiveModal').classList.add('active');
+    }
+
+    function closeReceiveModal(){
+        $('receiveModal').classList.remove('active');
+        REC_CURRENT_PO = null;
+    }
+
+    function renderRcvBuildItems(){
+        const tbody = $('rcvBuildBody');
+        const items = REC_CURRENT_PO ? REC_CURRENT_PO.items : [];
+        tbody.innerHTML = items.map((it, i) => `
+            <tr data-idx="${i}" data-posrno="${it.srNo}">
+                <td style="text-align:center;font-weight:700;">${it.srNo}</td>
+                <td><b style="color:#0284c7;font-size:11px;">${escapeHtml(it.reqNo)}</b><br><small>Sr ${it.reqSrNo}</small></td>
+                <td><b>${escapeHtml(it.itemName||'')}</b><br><small style="color:#64748b;">${escapeHtml((it.itemDesc||'').slice(0,40))}</small></td>
+                <td>${escapeHtml(it.make||'')}</td>
+                <td>${escapeHtml(it.uom||'')}</td>
+                <td style="text-align:center;font-weight:700;">${(it.qty||0).toLocaleString('en-IN')}</td>
+                <td style="text-align:center;color:#047857;font-weight:700;">${(it.receivedQty||0).toLocaleString('en-IN')}</td>
+                <td style="text-align:center;background:#fef3c7;color:#b45309;font-weight:800;">${(it.pendingQty||0).toLocaleString('en-IN')}</td>
+                <td><input type="number" class="rcv-qty" min="0" max="${it.pendingQty||0}" step="any" value="0" ${it.pendingQty<=0?'disabled':''}></td>
+                <td><input type="text" class="rcv-remarks" placeholder="optional" ${it.pendingQty<=0?'disabled':''}></td>
+            </tr>
+        `).join('');
+
+        tbody.querySelectorAll('tr').forEach(tr => {
+            const idx = Number(tr.dataset.idx);
+            const it  = REC_CURRENT_PO.items[idx];
+            const inp = tr.querySelector('.rcv-qty');
+            inp.addEventListener('input', () => {
+                let v = Number(inp.value) || 0;
+                const maxV = Number(it.pendingQty) || 0;
+                if (v < 0) v = 0;
+                if (v > maxV) { v = maxV; inp.value = maxV; }
+                recalcRcvTotals();
+            });
+        });
+    }
+
+    function recalcRcvTotals(){
+        const items = REC_CURRENT_PO ? REC_CURRENT_PO.items : [];
+        let totOrd=0, totAlready=0, totPending=0, totNow=0;
+        document.querySelectorAll('#rcvBuildBody tr').forEach(tr => {
+            const idx = Number(tr.dataset.idx);
+            const it  = items[idx]; if (!it) return;
+            totOrd     += Number(it.qty)         || 0;
+            totAlready += Number(it.receivedQty) || 0;
+            totPending += Number(it.pendingQty)  || 0;
+            totNow     += Number(tr.querySelector('.rcv-qty').value) || 0;
+        });
+        $('rcvTotOrd').textContent     = totOrd.toLocaleString('en-IN');
+        $('rcvTotAlready').textContent = totAlready.toLocaleString('en-IN');
+        $('rcvTotPending').textContent = totPending.toLocaleString('en-IN');
+        $('rcvTotNow').textContent     = totNow.toLocaleString('en-IN');
+    }
+
+    function fillAllPending(){
+        document.querySelectorAll('#rcvBuildBody tr').forEach(tr => {
+            const idx = Number(tr.dataset.idx);
+            const it = REC_CURRENT_PO.items[idx];
+            const inp = tr.querySelector('.rcv-qty');
+            if (inp && !inp.disabled) inp.value = Number(it.pendingQty) || 0;
+        });
+        recalcRcvTotals();
+    }
+    function clearAllReceive(){
+        document.querySelectorAll('#rcvBuildBody .rcv-qty').forEach(inp => { if (!inp.disabled) inp.value = 0; });
+        recalcRcvTotals();
+    }
+
+    async function confirmReceive(){
+        if (!REC_CURRENT_PO) return;
+        const gp = $('rcvGpField').value.trim();
+        if (!gp){ showToast('&#9888; Gate Pass No required.', 'warn', 4000); $('rcvGpField').focus(); return; }
+        const recvBy = $('rcvByField').value.trim();
+        if (!recvBy){ showToast('&#9888; Received By required.', 'warn', 4000); $('rcvByField').focus(); return; }
+        const rcvDate = $('rcvDateField').value;
+        if (!rcvDate){ showToast('&#9888; Receipt Date required.', 'warn', 4000); $('rcvDateField').focus(); return; }
+        localStorage.setItem(UPDATED_BY_KEY, recvBy);
+
+        const items = [];
+        document.querySelectorAll('#rcvBuildBody tr').forEach(tr => {
+            const poSrNo = Number(tr.dataset.posrno);
+            const qty    = Number(tr.querySelector('.rcv-qty').value) || 0;
+            const remarks= tr.querySelector('.rcv-remarks').value.trim();
+            if (qty > 0) items.push({ poSrNo, receivedQty: qty, remarks });
+        });
+
+        if (items.length === 0){
+            showToast('&#9888; Enter receive qty for at least one item.', 'warn', 4500);
+            return;
+        }
+
+        showSyncOverlay('Saving receipt...');
+        try {
+            const result = await syncToCloud({
+                action: 'receivePOItems',
+                poNo:        REC_CURRENT_PO.poNo,
+                gatePassNo:  gp,
+                receiptDate: rcvDate,
+                receivedBy:  recvBy,
+                remarks:     $('rcvRemarksField').value.trim(),
+                items:       items
+            });
+            hideSyncOverlay();
+            if (result.status === 'OK'){
+                showToast('&#9989; '+result.message+' &middot; PO Status: <b>'+result.poStatus+'</b>', 'success', 7000);
+                closeReceiveModal();
+                loadReceivingPOs();
+            } else {
+                showToast('&#10060; '+(result.message||'Receipt failed'), 'error', 7000);
+            }
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 7000);
+        }
+    }
+
+    /* ================================================================
+       =============== SUMMARY TAB FUNCTIONS ==========================
+       ================================================================ */
+    let SUMMARY_CACHE = [];
+
+    function refreshSumDateActivePill(){
+        const anyDate = $('sumReqDateFrom').value || $('sumReqDateTo').value
+                     || $('sumPoDateFrom').value  || $('sumPoDateTo').value;
+        $('sumDateActivePill').style.display = anyDate ? 'inline-flex' : 'none';
+    }
+
+    function clearSummaryDateFilters(){
+        $('sumReqDateFrom').value = '';
+        $('sumReqDateTo').value   = '';
+        $('sumPoDateFrom').value  = '';
+        $('sumPoDateTo').value    = '';
+        refreshSumDateActivePill();
+        loadSummary();
+    }
+
+    async function loadSummary(){
+        if (!URL_IS_CONFIGURED){
+            $('summaryBody').innerHTML = '<tr><td colspan="17" class="empty-state">⚠️ URL not configured.</td></tr>';
+            return;
+        }
+        refreshSumDateActivePill();
+        const reqDF = $('sumReqDateFrom').value;
+        const reqDT = $('sumReqDateTo').value;
+        const poDF  = $('sumPoDateFrom').value;
+        const poDT  = $('sumPoDateTo').value;
+        // Validate from <= to
+        if (reqDF && reqDT && reqDF > reqDT){
+            showToast('&#9888; Request Date From cannot be after Request Date To.', 'warn', 4500);
+            return;
+        }
+        if (poDF && poDT && poDF > poDT){
+            showToast('&#9888; PO Date From cannot be after PO Date To.', 'warn', 4500);
+            return;
+        }
+        showSyncOverlay('Loading summary...');
+        try {
+            const result = await syncToCloud({
+                action: 'itemsSummary',
+                search:      $('sumFilterSearch').value.trim(),
+                status:      $('sumFilterStatus').value,
+                department:  $('sumFilterDept').value,
+                priority:    $('sumFilterPriority').value,
+                reqNo:       $('sumFilterReqNo').value.trim(),
+                reqDateFrom: reqDF,
+                reqDateTo:   reqDT,
+                poDateFrom:  poDF,
+                poDateTo:    poDT
+            });
+            hideSyncOverlay();
+            if (result.status !== 'OK'){
+                showToast('&#10060; '+(result.message||'Load failed'), 'error', 6000);
+                $('summaryBody').innerHTML = '';
+                return;
+            }
+            SUMMARY_CACHE = result.items || [];
+            renderSummary(SUMMARY_CACHE);
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 6000);
+        }
+    }
+
+    function renderSummary(items){
+        const tbody = $('summaryBody');
+        $('sumCount').textContent = items.length;
+        let tReq=0, tIss=0, tCan=0, tPo=0, tAvail=0, tRcv=0;
+        items.forEach(it => {
+            tReq   += Number(it.qtyRequested)   || 0;
+            tIss   += Number(it.qtyIssued)      || 0;
+            tCan   += Number(it.qtyCancelled)   || 0;
+            tPo    += Number(it.qtyPoGenerated) || 0;
+            tAvail += Number(it.qtyAvailable)   || 0;
+            tRcv   += Number(it.qtyReceived)    || 0;
+        });
+        $('sumTotalReq').textContent      = tReq.toLocaleString('en-IN');
+        $('sumTotalIssued').textContent   = tIss.toLocaleString('en-IN');
+        $('sumTotalReceived').textContent = tRcv.toLocaleString('en-IN');
+        $('sumTotalCancel').textContent   = tCan.toLocaleString('en-IN');
+        $('sumTotalPO').textContent       = tPo.toLocaleString('en-IN');
+        $('sumTotalAvail').textContent    = tAvail.toLocaleString('en-IN');
+
+        if (!items.length){
+            tbody.innerHTML = '<tr><td colspan="17" class="empty-state"><div class="ico">📊</div>No items match filters</td></tr>';
+            return;
+        }
+        const numCell = (n) => {
+            const v = Number(n) || 0;
+            return '<td class="num' + (v === 0 ? ' zero' : '') + '">' + v.toLocaleString('en-IN') + '</td>';
+        };
+        tbody.innerHTML = items.map(it => {
+            const rcv = Number(it.qtyReceived) || 0;
+            const rcvCell = '<td class="num" style="background:'+(rcv>0?'#d1fae5':'#f8fafc')+';color:'+(rcv>0?'#047857':'#94a3b8')+';font-weight:800;">'+rcv.toLocaleString('en-IN')+'</td>';
+
+            // Build PO No cell (each PO No on its own line) and PO PDF cell (one link per PO)
+            const poLinks = Array.isArray(it.poLinks) && it.poLinks.length
+                ? it.poLinks
+                : (it.poNo ? String(it.poNo).split(',').map(x=>x.trim()).filter(Boolean).map(pn => ({poNo:pn, pdfLink:''})) : []);
+            const poNoCell = poLinks.length
+                ? poLinks.map((p,i) => '<div style="color:#1d4ed8;font-weight:700;font-size:11px;'+(i>0?'margin-top:2px;':'')+'">'+escapeHtml(p.poNo)+'</div>').join('')
+                : '<small style="color:#94a3b8;">-</small>';
+            const pdfCell = poLinks.length
+                ? poLinks.map((p,i) => p.pdfLink
+                    ? '<div style="'+(i>0?'margin-top:2px;':'')+'"><a href="'+escapeHtml(p.pdfLink)+'" target="_blank" title="'+escapeHtml(p.poNo)+'" style="color:#0284c7;text-decoration:underline;font-weight:700;font-size:11px;">📄 '+escapeHtml(p.poNo)+'</a></div>'
+                    : '<div style="'+(i>0?'margin-top:2px;':'')+'"><small style="color:#94a3b8;">'+escapeHtml(p.poNo)+' (no PDF)</small></div>'
+                  ).join('')
+                : '<small style="color:#94a3b8;">-</small>';
+
+            return `
+            <tr>
+                <td><b style="color:#0284c7;">${escapeHtml(it.reqNo)}</b></td>
+                <td>${escapeHtml(it.reqDate||'')}</td>
+                <td>${escapeHtml(it.personName||'')}</td>
+                <td><b>${escapeHtml(it.itemName||'')}</b></td>
+                <td><small style="color:#475569;">${escapeHtml(it.itemDesc||'')}</small></td>
+                <td>${escapeHtml(it.make||'')}</td>
+                <td>${escapeHtml(it.category||'')}</td>
+                ${numCell(it.qtyRequested)}
+                ${numCell(it.qtyIssued)}
+                ${numCell(it.qtyCancelled)}
+                ${numCell(it.qtyPoGenerated)}
+                ${rcvCell}
+                <td>${it.gatePassNo ? '<small style="color:#b45309;font-weight:700;">'+escapeHtml(it.gatePassNo)+'</small>' : '<small style="color:#94a3b8;">-</small>'}</td>
+                <td class="num" style="background:#dbeafe;color:#1d4ed8;font-weight:800;">${(it.qtyAvailable||0).toLocaleString('en-IN')}</td>
+                <td><span class="badge ${statusBadgeClass(it.itemStatus)}">${escapeHtml(it.itemStatus||'Pending')}</span></td>
+                <td>${poNoCell}</td>
+                <td>${pdfCell}</td>
+            </tr>`;
+        }).join('');
+    }
+
+    function exportSummaryCsv(){
+        if (!SUMMARY_CACHE.length){ showToast('&#9888; Nothing to export.', 'warn', 3000); return; }
+        const headers = ['Requirement No','Request Date','Person Name','Item Name','Item Description',
+            'Make / Brand','Category','Qty Requested','Qty Issued','Qty Cancelled',
+            'Qty PO Generated','Received Qty','Gate Pass No','Available','Item Status','PO No','PO PDF Link'];
+        const rows = SUMMARY_CACHE.map(it => {
+            const allPoNos = (it.poLinks && it.poLinks.length)
+                ? it.poLinks.map(p => p.poNo).join(' | ')
+                : (it.poNo || '');
+            const allPdfs = (it.poLinks && it.poLinks.length)
+                ? it.poLinks.filter(p => p.pdfLink).map(p => p.pdfLink).join(' | ')
+                : (it.poPdfLink || '');
+            return [
+                it.reqNo, it.reqDate, it.personName, it.itemName, it.itemDesc,
+                it.make, it.category, it.qtyRequested, it.qtyIssued, it.qtyCancelled,
+                it.qtyPoGenerated, it.qtyReceived, it.gatePassNo, it.qtyAvailable,
+                it.itemStatus, allPoNos, allPdfs
+            ];
+        });
+        const all = [headers].concat(rows);
+        const csv = all.map(row => row.map(cell => {
+            const s = String(cell == null ? '' : cell);
+            if (/[",\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+            return s;
+        }).join(',')).join('\r\n');
+        const blob = new Blob([ '﻿' + csv ], { type: 'text/csv;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const stamp = todayISO().replace(/-/g,'');
+        a.download = 'SARV_Summary_' + stamp + '.csv';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('&#128190; Summary CSV exported.', 'success', 3000);
+    }
+
+    /* ---------- INIT ---------- */
+    $('reqDate').value        = todayISO();
+    $('requiredByDate').value = todayISO();
+    const restored = loadDraft();
+    if (!restored) addItemRow();
+    $('reqNoField').value = generateReqNo();
+
+    /* ---------- EVENT WIRING ---------- */
+    $('addItemBtn').addEventListener('click', ()=> addItemRow());
+
+    ['reqDate','requiredByDate','priority','reqPersonName','reqEmpCode','reqDesignation',
+     'reqDepartment','reqContact','reqMachine','reqPurpose','overallRemarks']
+    .forEach(id=>{
+        $(id).addEventListener('input', saveDraft);
+        $(id).addEventListener('change', ()=>{ recalcTotals(); saveDraft(); });
+    });
+
+    $('clearBtn').addEventListener('click', ()=>{
+        if (confirm('Clear the entire form?')){
+            localStorage.removeItem(DRAFT_KEY);
+            resetForm(false);
+            showToast('Form cleared.', 'success', 2500);
+        }
+    });
+    $('exportCsvBtn').addEventListener('click', exportCsv);
+    $('submitBtn').addEventListener('click', ()=>{ if (validateForm()) openConfirmModal(); });
+    $('modalCancelBtn').addEventListener('click', closeConfirmModal);
+    $('modalConfirmBtn').addEventListener('click', doSubmit);
+    $('confirmModal').addEventListener('click', (e)=>{ if (e.target.id === 'confirmModal') closeConfirmModal(); });
+
+    $('refreshListBtn').addEventListener('click', loadRequirementsList);
+    ['filterSearch','filterStatus','filterDept','filterPriority','filterFrom'].forEach(id=>{
+        $(id).addEventListener('change', loadRequirementsList);
+    });
+    let searchDeb;
+    $('filterSearch').addEventListener('input', ()=>{
+        clearTimeout(searchDeb);
+        searchDeb = setTimeout(loadRequirementsList, 400);
+    });
+
+    $('saveAllItemsBtn').addEventListener('click', saveAllItemChanges);
+    $('closeMasterBtn').addEventListener('click', ()=> openMasterActionModal('close'));
+    $('cancelMasterBtn').addEventListener('click', ()=> openMasterActionModal('cancel'));
+    $('openPdfBtn').addEventListener('click', openCurrentPdf);
+    $('regenPdfBtn').addEventListener('click', regenerateCurrentPdf);
+    $('masterActionCancelBtn').addEventListener('click', closeMasterActionModal);
+    $('masterActionConfirmBtn').addEventListener('click', confirmMasterAction);
+    $('masterActionModal').addEventListener('click', (e)=>{ if (e.target.id === 'masterActionModal') closeMasterActionModal(); });
+
+    /* ---- PO TAB EVENT WIRING ---- */
+    $('poSubPendingBtn').addEventListener('click', ()=> showPoSubPanel('pending'));
+    $('poSubListBtn').addEventListener('click',    ()=> showPoSubPanel('list'));
+    $('poRefreshBtn').addEventListener('click', loadPoPending);
+    $('poListRefreshBtn').addEventListener('click', loadPoList);
+    ['poFilterDept','poFilterPriority'].forEach(id=>{
+        $(id).addEventListener('change', loadPoPending);
+    });
+    let poSearchDeb;
+    $('poFilterSearch').addEventListener('input', ()=>{
+        clearTimeout(poSearchDeb);
+        poSearchDeb = setTimeout(loadPoPending, 400);
+    });
+    $('poFilterReqNo').addEventListener('input', ()=>{
+        clearTimeout(poSearchDeb);
+        poSearchDeb = setTimeout(loadPoPending, 400);
+    });
+    let poListSearchDeb;
+    $('poListSearch').addEventListener('input', ()=>{
+        clearTimeout(poListSearchDeb);
+        poListSearchDeb = setTimeout(loadPoList, 400);
+    });
+    $('poListStatus').addEventListener('change', loadPoList);
+
+    $('poSelectAll').addEventListener('change', () => {
+        const checked = $('poSelectAll').checked;
+        document.querySelectorAll('#poPendingBody .po-check').forEach(c => {
+            if (c.checked !== checked) {
+                c.checked = checked;
+                c.dispatchEvent(new Event('change'));
+            }
+        });
+    });
+
+    $('poBuildBtn').addEventListener('click', openPoBuildModal);
+    $('poBuildCancelBtn').addEventListener('click', closePoBuildModal);
+    $('poBuildConfirmBtn').addEventListener('click', confirmPoBuild);
+    $('poBuildModal').addEventListener('click', (e)=>{ if (e.target.id === 'poBuildModal') closePoBuildModal(); });
+    ['poGstPctField','poFreightField','poOtherExpField','poOtherLabelField'].forEach(id=>{
+        $(id).addEventListener('input', recalcPoBuildTotals);
+    });
+
+    /* ---- RECEIVING TAB EVENT WIRING ---- */
+    $('recRefreshBtn').addEventListener('click', loadReceivingPOs);
+    $('recFilterStatus').addEventListener('change', loadReceivingPOs);
+    ['recFilterPoDateFrom','recFilterPoDateTo'].forEach(id => {
+        $(id).addEventListener('change', loadReceivingPOs);
+    });
+    let recSearchDeb;
+    $('recFilterSearch').addEventListener('input', () => {
+        clearTimeout(recSearchDeb);
+        recSearchDeb = setTimeout(loadReceivingPOs, 400);
+    });
+
+    $('rcvCancelBtn').addEventListener('click', closeReceiveModal);
+    $('rcvConfirmBtn').addEventListener('click', confirmReceive);
+    $('rcvFillPendingBtn').addEventListener('click', fillAllPending);
+    $('rcvClearAllBtn').addEventListener('click', clearAllReceive);
+    $('receiveModal').addEventListener('click', (e)=>{ if (e.target.id === 'receiveModal') closeReceiveModal(); });
+
+    /* ---- SUMMARY TAB EVENT WIRING ---- */
+    $('sumRefreshBtn').addEventListener('click', loadSummary);
+    $('sumExportCsvBtn').addEventListener('click', exportSummaryCsv);
+    $('sumClearDatesBtn').addEventListener('click', clearSummaryDateFilters);
+    ['sumFilterStatus','sumFilterDept','sumFilterPriority'].forEach(id=>{
+        $(id).addEventListener('change', loadSummary);
+    });
+    // Date filters fire on change (date pickers don't fire on each keystroke)
+    ['sumReqDateFrom','sumReqDateTo','sumPoDateFrom','sumPoDateTo'].forEach(id=>{
+        $(id).addEventListener('change', ()=>{ refreshSumDateActivePill(); loadSummary(); });
+    });
+    let sumSearchDeb;
+    $('sumFilterSearch').addEventListener('input', ()=>{
+        clearTimeout(sumSearchDeb);
+        sumSearchDeb = setTimeout(loadSummary, 400);
+    });
+    $('sumFilterReqNo').addEventListener('input', ()=>{
+        clearTimeout(sumSearchDeb);
+        sumSearchDeb = setTimeout(loadSummary, 400);
+    });
+
+    document.addEventListener('keydown', (e)=>{
+        if (e.key === 'Escape'){ closeConfirmModal(); closeMasterActionModal(); closePoBuildModal(); closeReceiveModal(); }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
+            e.preventDefault();
+            if (document.querySelector('.nav-link.active').dataset.tab === 'entry'){
+                if (validateForm()) openConfirmModal();
+            }
+        }
+    });
+
+    recalcTotals();
+
+    if (URL_IS_CONFIGURED){
+        verifyBackend();
+        setTimeout(flushPendingQueue, 2000);
+    } else {
+        $('syncStatus').textContent = 'NOT CONFIGURED';
+        $('syncStatus').className = 'sync-status offline';
+        $('setupBanner').style.display = 'block';
+    }
+
+    window.SARV_DEBUG = {
+        verifyBackend, flushPendingQueue, loadRequirementsList, loadRequirementDetail,
+        loadPoPending, loadPoList, openPoBuildModal, closePoBuildModal,
+        loadReceivingPOs, openReceiveModal, closeReceiveModal,
+        loadSummary, exportSummaryCsv,
+        getSelected: ()=> Array.from(PO_SELECTED.values()),
+        clearSelection: clearPoSelection,
+        getReceivingPOs: ()=> REC_POS_CACHE,
+        getSummary: ()=> SUMMARY_CACHE,
+        getPending: ()=> JSON.parse(localStorage.getItem(PENDING_KEY) || '[]'),
+        clearPending: ()=> localStorage.removeItem(PENDING_KEY),
+        isConfigured: URL_IS_CONFIGURED, currentUrl: APPS_SCRIPT_URL
+    };
+    </script>
+</body>
+</html>

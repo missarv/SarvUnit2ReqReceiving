@@ -350,6 +350,7 @@
         .badge-closed      { background:#cbd5e1; color:#1e293b; }
         .badge-cancelled   { background:#fee2e2; color:#b91c1c; }
         .badge-po          { background:#dbeafe; color:#1d4ed8; }
+        .badge-received    { background:#ccfbf1; color:#0f766e; }
         .badge-normal      { background:#d1fae5; color:#047857; }
         .badge-urgent      { background:#fef3c7; color:#b45309; }
         .badge-critical    { background:#fee2e2; color:#b91c1c; }
@@ -769,6 +770,7 @@
                             <option value="">All</option>
                             <option>Pending</option>
                             <option>In Progress</option>
+                            <option>Received</option>
                             <option>Fulfilled</option>
                             <option>Closed</option>
                             <option>Cancelled</option>
@@ -805,6 +807,7 @@
                     <span class="totals-pill"><span class="lbl">Showing</span><span class="val" id="listCount">0</span></span>
                     <span class="totals-pill" id="pillPending" style="display:none;background:#e0e7ff;border-color:#a5b4fc;"><span class="lbl">Pending</span><span class="val" id="cntPending">0</span></span>
                     <span class="totals-pill" id="pillProgress" style="display:none;background:#fef3c7;border-color:#fcd34d;"><span class="lbl">In Progress</span><span class="val" id="cntProgress">0</span></span>
+                    <span class="totals-pill" id="pillReceived" style="display:none;background:#ccfbf1;border-color:#5eead4;color:#0f766e;"><span class="lbl">Received</span><span class="val" id="cntReceived">0</span></span>
                     <span class="totals-pill success" id="pillFulfilled" style="display:none;"><span class="lbl">Fulfilled</span><span class="val" id="cntFulfilled">0</span></span>
                 </div>
 
@@ -1153,7 +1156,6 @@
                     <span class="totals-pill" style="background:#d1fae5;border-color:#6ee7b7;color:#047857;"><span class="lbl">Received</span><span class="val" id="sumTotalReceived">0</span></span>
                     <span class="totals-pill" style="background:#fee2e2;border-color:#fca5a5;color:#b91c1c;"><span class="lbl">Cancelled</span><span class="val" id="sumTotalCancel">0</span></span>
                     <span class="totals-pill" style="background:#dbeafe;border-color:#93c5fd;color:#1d4ed8;"><span class="lbl">In PO</span><span class="val" id="sumTotalPO">0</span></span>
-                    <span class="totals-pill"><span class="lbl">Available</span><span class="val" id="sumTotalAvail">0</span></span>
                     <button class="btn btn-success btn-sm" id="sumExportCsvBtn" style="margin-left:auto;">&#128190; Export CSV</button>
                 </div>
 
@@ -1174,7 +1176,6 @@
                                 <th style="text-align:center;">Qty PO Generated</th>
                                 <th style="text-align:center;background:#d1fae5;color:#047857;">Received Qty</th>
                                 <th>Gate Pass No</th>
-                                <th style="text-align:center;">Available</th>
                                 <th>Item Status</th>
                                 <th>PO No (If Generated)</th>
                                 <th>PO PDF (If Generated)</th>
@@ -1433,7 +1434,7 @@
        ███████████████████████████████████████████████████████████████████
        ═══════════════════════════════════════════════════════════════════ */
 
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUupGm6_olJpaR59tu5mv-sdQmt0aq-zYYNfKi4Pm22RyrF3mNWJr38fYb_KzKC6kwqQ/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrLxLRDAP_fWL0gNOAch7l-snl1FxBjBZbWvI929ht7A9ZozLBedHFfW8Zv-J1j16kuw/exec";
 
     /* ═══════════════════════════════════════════════════════════════════
        ⬆️ Bas yahi ek line edit karni hai - aage kuch chedhna nahi. ⬆️
@@ -1959,7 +1960,7 @@
         const s = String(status||'').toLowerCase();
         if (s.includes('po'))         return 'badge-po';
         if (s.includes('received') && s.includes('partial')) return 'badge-partial';
-        if (s === 'received')         return 'badge-fulfilled';
+        if (s === 'received')         return 'badge-received';
         if (s === 'generated')        return 'badge-po';
         if (s.includes('pending'))    return 'badge-pending';
         if (s.includes('progress'))   return 'badge-progress';
@@ -1980,18 +1981,21 @@
         const tbody = $('reqListBody');
         $('listCount').textContent = items.length;
 
-        let cP=0,cI=0,cF=0;
+        let cP=0,cI=0,cR=0,cF=0;
         items.forEach(it=>{
             const s = String(it.status||'').toLowerCase();
-            if (s.includes('pending')) cP++;
+            if (s === 'received')      cR++;
+            else if (s.includes('pending')) cP++;
             else if (s.includes('progress')) cI++;
             else if (s.includes('fulfilled')) cF++;
         });
-        $('cntPending').textContent = cP;
+        $('cntPending').textContent  = cP;
         $('cntProgress').textContent = cI;
-        $('cntFulfilled').textContent = cF;
+        $('cntReceived').textContent = cR;
+        $('cntFulfilled').textContent= cF;
         $('pillPending').style.display    = cP ? 'inline-flex' : 'none';
         $('pillProgress').style.display   = cI ? 'inline-flex' : 'none';
+        $('pillReceived').style.display   = cR ? 'inline-flex' : 'none';
         $('pillFulfilled').style.display  = cF ? 'inline-flex' : 'none';
 
         if (!items.length){
@@ -2864,7 +2868,7 @@
 
     async function loadSummary(){
         if (!URL_IS_CONFIGURED){
-            $('summaryBody').innerHTML = '<tr><td colspan="17" class="empty-state">⚠️ URL not configured.</td></tr>';
+            $('summaryBody').innerHTML = '<tr><td colspan="16" class="empty-state">⚠️ URL not configured.</td></tr>';
             return;
         }
         refreshSumDateActivePill();
@@ -2912,24 +2916,22 @@
     function renderSummary(items){
         const tbody = $('summaryBody');
         $('sumCount').textContent = items.length;
-        let tReq=0, tIss=0, tCan=0, tPo=0, tAvail=0, tRcv=0;
+        let tReq=0, tIss=0, tCan=0, tPo=0, tRcv=0;
         items.forEach(it => {
-            tReq   += Number(it.qtyRequested)   || 0;
-            tIss   += Number(it.qtyIssued)      || 0;
-            tCan   += Number(it.qtyCancelled)   || 0;
-            tPo    += Number(it.qtyPoGenerated) || 0;
-            tAvail += Number(it.qtyAvailable)   || 0;
-            tRcv   += Number(it.qtyReceived)    || 0;
+            tReq += Number(it.qtyRequested)   || 0;
+            tIss += Number(it.qtyIssued)      || 0;
+            tCan += Number(it.qtyCancelled)   || 0;
+            tPo  += Number(it.qtyPoGenerated) || 0;
+            tRcv += Number(it.qtyReceived)    || 0;
         });
         $('sumTotalReq').textContent      = tReq.toLocaleString('en-IN');
         $('sumTotalIssued').textContent   = tIss.toLocaleString('en-IN');
         $('sumTotalReceived').textContent = tRcv.toLocaleString('en-IN');
         $('sumTotalCancel').textContent   = tCan.toLocaleString('en-IN');
         $('sumTotalPO').textContent       = tPo.toLocaleString('en-IN');
-        $('sumTotalAvail').textContent    = tAvail.toLocaleString('en-IN');
 
         if (!items.length){
-            tbody.innerHTML = '<tr><td colspan="17" class="empty-state"><div class="ico">📊</div>No items match filters</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="16" class="empty-state"><div class="ico">📊</div>No items match filters</td></tr>';
             return;
         }
         const numCell = (n) => {
@@ -2969,7 +2971,6 @@
                 ${numCell(it.qtyPoGenerated)}
                 ${rcvCell}
                 <td>${it.gatePassNo ? '<small style="color:#b45309;font-weight:700;">'+escapeHtml(it.gatePassNo)+'</small>' : '<small style="color:#94a3b8;">-</small>'}</td>
-                <td class="num" style="background:#dbeafe;color:#1d4ed8;font-weight:800;">${(it.qtyAvailable||0).toLocaleString('en-IN')}</td>
                 <td><span class="badge ${statusBadgeClass(it.itemStatus)}">${escapeHtml(it.itemStatus||'Pending')}</span></td>
                 <td>${poNoCell}</td>
                 <td>${pdfCell}</td>
@@ -2981,7 +2982,7 @@
         if (!SUMMARY_CACHE.length){ showToast('&#9888; Nothing to export.', 'warn', 3000); return; }
         const headers = ['Requirement No','Request Date','Person Name','Item Name','Item Description',
             'Make / Brand','Category','Qty Requested','Qty Issued','Qty Cancelled',
-            'Qty PO Generated','Received Qty','Gate Pass No','Available','Item Status','PO No','PO PDF Link'];
+            'Qty PO Generated','Received Qty','Gate Pass No','Item Status','PO No','PO PDF Link'];
         const rows = SUMMARY_CACHE.map(it => {
             const allPoNos = (it.poLinks && it.poLinks.length)
                 ? it.poLinks.map(p => p.poNo).join(' | ')
@@ -2992,7 +2993,7 @@
             return [
                 it.reqNo, it.reqDate, it.personName, it.itemName, it.itemDesc,
                 it.make, it.category, it.qtyRequested, it.qtyIssued, it.qtyCancelled,
-                it.qtyPoGenerated, it.qtyReceived, it.gatePassNo, it.qtyAvailable,
+                it.qtyPoGenerated, it.qtyReceived, it.gatePassNo,
                 it.itemStatus, allPoNos, allPdfs
             ];
         });

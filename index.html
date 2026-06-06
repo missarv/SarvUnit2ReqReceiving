@@ -997,7 +997,7 @@
                             <label>Status</label>
                             <select class="form-control" id="poListStatus">
                                 <option value="">All</option>
-                                <option>Generated</option><option>Partially Received</option>
+                                <option>Generated</option><option>MD Approved</option><option>Vendor Verified</option><option>Partially Received</option>
                                 <option>Received</option><option>Cancelled</option>
                             </select>
                         </div>
@@ -1048,6 +1048,8 @@
                         <select class="form-control" id="recFilterStatus">
                             <option value="">All Open</option>
                             <option>Generated</option>
+                            <option>MD Approved</option>
+                            <option>Vendor Verified</option>
                             <option>Partially Received</option>
                         </select>
                     </div>
@@ -1494,7 +1496,7 @@
        ███████████████████████████████████████████████████████████████████
        ═══════════════════════════════════════════════════════════════════ */
 
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxdDiZ7b91SkjhyCj1ppepGkpL1diwGudHfvY-KL2wDAuRRGRgnK_zczIeYbwQAqi_J/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwie-fLi0VYzNyOR0GPTo45wWLYv2lB-O-ZGhwvGo9R0g2X7T_QtNfVTY7nafIgqDABRA/exec";
 
     /* ═══════════════════════════════════════════════════════════════════
        ⬆️ Bas yahi ek line edit karni hai - aage kuch chedhna nahi. ⬆️
@@ -2105,9 +2107,11 @@
 
     function statusBadgeClass(status){
         const s = String(status||'').toLowerCase();
-        if (s.includes('po'))         return 'badge-po';
+        if (s.includes('verified'))   return 'badge-received';    // Vendor Verified -> teal/green
+        if (s.includes('approved'))   return 'badge-fulfilled';   // #3 MD Approved -> green
         if (s.includes('received') && s.includes('partial')) return 'badge-partial';
         if (s === 'received')         return 'badge-received';
+        if (s.includes('po'))         return 'badge-po';
         if (s === 'generated')        return 'badge-po';
         if (s.includes('pending'))    return 'badge-pending';
         if (s.includes('progress'))   return 'badge-progress';

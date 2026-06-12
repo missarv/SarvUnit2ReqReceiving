@@ -789,6 +789,8 @@
                             <option value="">All</option>
                             <option>Pending</option>
                             <option>PO Generated</option>
+                            <option>MD Approved</option>
+                            <option>Vendor Verified</option>
                             <option>In Progress</option>
                             <option>Received</option>
                             <option>Fulfilled</option>
@@ -1113,6 +1115,8 @@
                             <option value="">All</option>
                             <option>Pending</option>
                             <option>PO Generated</option>
+                            <option>MD Approved</option>
+                            <option>Vendor Verified</option>
                             <option>Received</option>
                             <option>Partially Issued</option>
                             <option>Fully Issued</option>
@@ -1496,7 +1500,7 @@
        ███████████████████████████████████████████████████████████████████
        ═══════════════════════════════════════════════════════════════════ */
 
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwie-fLi0VYzNyOR0GPTo45wWLYv2lB-O-ZGhwvGo9R0g2X7T_QtNfVTY7nafIgqDABRA/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2JbE7eii_yKFv14vCbDAHvtl7Yv8RMWTgJ__4EwZZuit798reHqk2u2lP0HeQgf6g/exec";
 
     /* ═══════════════════════════════════════════════════════════════════
        ⬆️ Bas yahi ek line edit karni hai - aage kuch chedhna nahi. ⬆️
@@ -2246,6 +2250,8 @@
                     <select class="table-select col-itemstatus" disabled style="background:#f1f5f9;">
                         <option value="Pending"          ${it.itemStatus==='Pending'?'selected':''}>⏳ Pending</option>
                         <option value="PO Generated"     ${it.itemStatus==='PO Generated'?'selected':''}>🛒 PO Generated</option>
+                        <option value="MD Approved"      ${it.itemStatus==='MD Approved'?'selected':''}>🟢 MD Approved</option>
+                        <option value="Vendor Verified"  ${it.itemStatus==='Vendor Verified'?'selected':''}>🟩 Vendor Verified</option>
                         <option value="Received"         ${it.itemStatus==='Received'?'selected':''}>📥 Received</option>
                         <option value="Partially Issued" ${it.itemStatus==='Partially Issued'?'selected':''}>🟡 Partial</option>
                         <option value="Fully Issued"     ${it.itemStatus==='Fully Issued'?'selected':''}>✅ Fully Issued</option>

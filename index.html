@@ -613,7 +613,7 @@
         <!-- ================== TAB 1: NEW ENTRY ================== -->
         <div class="tab-content active" id="tab-entry">
 
-            <!-- Setup banner - auto-shows ONLY if _SCRIPT_URL is empty -->
+            <!-- Setup banner - auto-shows ONLY if APPS_SCRIPT_URL is empty -->
             <div class="setup-banner" id="setupBanner" style="display:none;">
                 <b>⚠️ Setup Required:</b> Apps Script URL configured nahi hai. HTML file me edit karke daalo:
                 <ol>
@@ -740,13 +740,15 @@
                         <thead>
                             <tr>
                                 <th style="width: 4%; text-align: center;">Sr.</th>
-                                <th style="width: 16%;">Item Name <span style="color:#dc2626;">*</span></th>
-                                <th style="width: 22%;">Item Description / Spec</th>
-                                <th style="width: 11%;">MAKE / Brand</th>
-                                <th style="width: 12%;">Category</th>
-                                <th style="width: 8%;">Qty <span style="color:#dc2626;">*</span></th>
-                                <th style="width: 8%;">UOM</th>
-                                <th style="width: 15%;">Item Remarks</th>
+                                <th style="width: 14%;">Item Name <span style="color:#dc2626;">*</span></th>
+                                <th style="width: 18%;">Item Description / Spec</th>
+                                <th style="width: 9%;">MAKE / Brand</th>
+                                <th style="width: 10%;">Category</th>
+                                <th style="width: 11%;">Machine Name &amp; No.</th>
+                                <th style="width: 7%;">Qty <span style="color:#dc2626;">*</span></th>
+                                <th style="width: 7%;">UOM</th>
+                                <th style="width: 8%;" title="Only for Yarn / Briquettes items">Gross Wt. (kg)</th>
+                                <th style="width: 12%;">Item Remarks</th>
                                 <th style="width: 4%;"></th>
                             </tr>
                         </thead>
@@ -789,6 +791,7 @@
                             <option value="">All</option>
                             <option>Pending</option>
                             <option>PO Generated</option>
+                            <option>GM/CEO Approved</option>
                             <option>MD Approved</option>
                             <option>Vendor Verified</option>
                             <option>In Progress</option>
@@ -999,8 +1002,8 @@
                             <label>Status</label>
                             <select class="form-control" id="poListStatus">
                                 <option value="">All</option>
-                                <option>Generated</option><option>MD Approved</option><option>Vendor Verified</option><option>Partially Received</option>
-                                <option>Received</option><option>Cancelled</option>
+                                <option>Generated</option><option>GM/CEO Approved</option><option>MD Approved</option><option>Vendor Verified</option><option>Partially Received</option>
+                                <option>Received</option><option>Rejected</option><option>Cancelled</option>
                             </select>
                         </div>
                         <div>
@@ -1025,6 +1028,7 @@
                                     <th style="text-align:right;">Grand Total</th>
                                     <th>Status</th>
                                     <th>PDF</th>
+                                    <th>Edit</th>
                                 </tr>
                             </thead>
                             <tbody id="poListBody"></tbody>
@@ -1050,6 +1054,7 @@
                         <select class="form-control" id="recFilterStatus">
                             <option value="">All Open</option>
                             <option>Generated</option>
+                            <option>GM/CEO Approved</option>
                             <option>MD Approved</option>
                             <option>Vendor Verified</option>
                             <option>Partially Received</option>
@@ -1115,6 +1120,7 @@
                             <option value="">All</option>
                             <option>Pending</option>
                             <option>PO Generated</option>
+                            <option>GM/CEO Approved</option>
                             <option>MD Approved</option>
                             <option>Vendor Verified</option>
                             <option>Received</option>
@@ -1298,8 +1304,9 @@
                             <th style="width:10%; background:#dbeafe; color:#1d4ed8;">PO Qty <span style="color:#dc2626;">*</span></th>
                             <th style="width:8%; background:#fef2f2; color:#b91c1c;" title="Cancel remaining qty now (optional)">Cancel</th>
                             <th style="width:5%;">UOM</th>
+                            <th style="width:7%; background:#fef9c3; color:#854d0e;" title="Only for Yarn / Briquettes items">Gross Wt (kg)</th>
                             <th style="width:11%;">Unit Price <span style="color:#dc2626;">*</span></th>
-                            <th style="width:12%; text-align:right;">Total</th>
+                            <th style="width:9%; text-align:right;">Total</th>
                         </tr>
                     </thead>
                     <tbody id="poBuildBody"></tbody>
@@ -1363,6 +1370,102 @@
             <div class="modal-actions" style="margin-top: 14px;">
                 <button class="btn btn-neutral" id="poBuildCancelBtn">Cancel</button>
                 <button class="btn btn-success" id="poBuildConfirmBtn">🛒 Generate PO, Sign &amp; Send for Approval</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ PO EDIT MODAL (#6 1-hour editable) ============ -->
+    <div class="modal-overlay" id="poEditModal">
+        <div class="modal-box lg" style="max-height: 92vh; overflow-y: auto;">
+            <h3 class="modal-title">✏️ Edit PO <span id="poEditNoLabel" style="color:#0284c7;"></span></h3>
+            <p class="modal-sub" id="poEditWindowLabel" style="color:#b45309;font-weight:600;"></p>
+
+            <div class="grid-3" style="margin-bottom:10px;">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Vendor (M/s)</label>
+                    <input type="text" class="form-control" id="poEditVendorName">
+                </div>
+                <div class="form-group">
+                    <label>Vendor Mail ID</label>
+                    <input type="text" class="form-control" id="poEditVendorMail">
+                </div>
+            </div>
+            <div class="grid-3" style="margin-bottom:10px;">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Vendor Address</label>
+                    <textarea class="form-control" id="poEditVendorAddress" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Vendor Contact</label>
+                    <input type="text" class="form-control" id="poEditVendorContact">
+                </div>
+            </div>
+            <div class="grid-4" style="margin-bottom:10px;">
+                <div class="form-group">
+                    <label>Delivery Date</label>
+                    <input type="date" class="form-control" id="poEditDeliveryDate">
+                </div>
+                <div class="form-group">
+                    <label>Payment Terms</label>
+                    <select class="form-control" id="poEditPaymentTerms">
+                        <option value="Payment terms 0 days after receipt of bill">0 days</option>
+                        <option value="Payment terms 7 days after receipt of bill">7 days</option>
+                        <option value="Payment terms 15 days after receipt of bill">15 days</option>
+                        <option value="Payment terms 30 days after receipt of bill">30 days</option>
+                        <option value="Payment terms 60 days after receipt of bill">60 days</option>
+                        <option value="Payment terms 90 days after receipt of bill">90 days</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>GST %</label>
+                    <input type="number" class="form-control" id="poEditGstPct" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Contact For Location or Confirmation</label>
+                    <input type="text" class="form-control" id="poEditLocationContact" placeholder="+91 xxxxxxxxxxxx">
+                </div>
+            </div>
+            <div class="grid-3" style="margin-bottom:10px;">
+                <div class="form-group">
+                    <label>Freight / Transport</label>
+                    <input type="number" class="form-control" id="poEditFreight" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Other Exp. Label</label>
+                    <input type="text" class="form-control" id="poEditOtherLabel" value="Labour Other Exp.">
+                </div>
+                <div class="form-group">
+                    <label>Other Expense</label>
+                    <input type="number" class="form-control" id="poEditOtherExp" min="0" step="0.01">
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom:10px;">
+                <label>Important Notes</label>
+                <textarea class="form-control" id="poEditNotes" rows="2"></textarea>
+            </div>
+
+            <div class="table-container" style="max-height: 240px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:6%;">Sr</th>
+                            <th>Item Name</th>
+                            <th style="text-align:center;width:10%;">Qty</th>
+                            <th style="text-align:center;width:8%;">UOM</th>
+                            <th style="width:16%;">Unit Price</th>
+                            <th style="text-align:right;width:14%;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="poEditItemsBody"></tbody>
+                </table>
+            </div>
+            <div class="items-total-strip" style="margin-top:8px;">
+                <span class="totals-pill"><span class="lbl">Grand Total (live)</span><span class="val" id="poEditGrandTotalView">0.00</span></span>
+            </div>
+
+            <div class="modal-actions" style="margin-top: 14px;">
+                <button class="btn btn-neutral" id="poEditCancelBtn">Cancel</button>
+                <button class="btn btn-success" id="poEditSaveBtn">💾 Save Changes</button>
             </div>
         </div>
     </div>
@@ -1500,7 +1603,7 @@
        ███████████████████████████████████████████████████████████████████
        ═══════════════════════════════════════════════════════════════════ */
 
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZlDNUaO7inSXPO0lrpCRuFGPEgAvfLu2_VpQlsfjUjmZ7Ej08zxAiQg47MBSYTp6o/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDsQXYauVV9Q23A13qd0bF_w2XQGJObtU5t40kc5mbPq_PGavBlfINCUca5nzTamx18A/exec";
 
     /* ═══════════════════════════════════════════════════════════════════
        ⬆️ Bas yahi ek line edit karni hai - aage kuch chedhna nahi. ⬆️
@@ -1646,8 +1749,10 @@
             <td><input type="text" class="table-input col-desc" placeholder="Detailed spec / size / color" value="${escapeHtml(data.itemDesc||'')}"></td>
             <td><input type="text" class="table-input col-make" placeholder="Make / Brand" value="${escapeHtml(data.make||'')}"></td>
             <td><select class="table-select col-cat">${buildCatOptions(data.category||'')}</select></td>
+            <td><input type="text" class="table-input col-machine" placeholder="e.g. Loom-3 / M-12" value="${escapeHtml(data.machineNo||'')}"></td>
             <td><input type="number" class="table-input col-qty" placeholder="0" min="0" step="any" value="${data.qty||''}"></td>
             <td><select class="table-select col-uom">${buildUomOptions(data.uom||'Pcs')}</select></td>
+            <td><input type="number" class="table-input col-grossweight" placeholder="kg" min="0" step="any" value="${(data.grossWeight!=null&&data.grossWeight!=='')?data.grossWeight:''}" style="display:none;background:#fef9c3;"></td>
             <td><input type="text" class="table-input col-rem" placeholder="optional note" value="${escapeHtml(data.remarks||'')}"></td>
             <td style="text-align:center;"><button class="delete-row-btn" title="Remove">&times;</button></td>
         `;
@@ -1664,8 +1769,29 @@
             el.addEventListener('change',()=>{ recalcTotals(); saveDraft(); });
         });
 
+        // #1/#4 Gross Weight input only applies to Yarn / Briquettes items - show/hide based on Item Name
+        const nameInp = tr.querySelector('.col-name');
+        const gwInp   = tr.querySelector('.col-grossweight');
+        const toggleGrossWeight = () => {
+            if (isYarnOrBriquette(nameInp.value)) {
+                gwInp.style.display = '';
+            } else {
+                gwInp.style.display = 'none';
+                gwInp.value = '';
+            }
+        };
+        nameInp.addEventListener('input', toggleGrossWeight);
+        nameInp.addEventListener('change', toggleGrossWeight);
+        toggleGrossWeight();
+
         refreshSerials();
         recalcTotals();
+    }
+
+    // #1/#4 Gross Weight applies only when the item name contains "yarn" or "briquette(s)"
+    function isYarnOrBriquette(itemName){
+        const n = String(itemName||'').toLowerCase();
+        return n.indexOf('yarn') !== -1 || n.indexOf('briquette') !== -1;
     }
 
     function refreshSerials(){
@@ -1699,8 +1825,15 @@
                 itemDesc: r.querySelector('.col-desc').value.trim(),
                 make:     r.querySelector('.col-make').value.trim(),
                 category: r.querySelector('.col-cat').value,
+                machineNo: r.querySelector('.col-machine').value.trim(),
                 qty:      parseFloat(r.querySelector('.col-qty').value) || 0,
                 uom:      r.querySelector('.col-uom').value,
+                grossWeight: (function(){
+                    const gw = r.querySelector('.col-grossweight');
+                    if (gw.style.display === 'none' || gw.value === '') return null;
+                    const v = parseFloat(gw.value);
+                    return isNaN(v) ? null : v;
+                })(),
                 remarks:  r.querySelector('.col-rem').value.trim()
             });
         });
@@ -2052,7 +2185,8 @@
         const items = d.items || [];
         if (items.length){
             items.forEach(it=> addItemRow({ itemName:it.itemName, itemDesc:it.itemDesc, make:it.make,
-                category:it.category, qty:it.qtyRequested, uom:it.uom, remarks:it.remarks }));
+                category:it.category, machineNo:it.machineNo, qty:it.qtyRequested, uom:it.uom,
+                grossWeight:it.grossWeight, remarks:it.remarks }));
         } else { addItemRow(); }
         recalcTotals();
         $('submitBtn').innerHTML = '\uD83D\uDCBE Update PR';
@@ -2112,6 +2246,7 @@
     function statusBadgeClass(status){
         const s = String(status||'').toLowerCase();
         if (s.includes('verified'))   return 'badge-received';    // Vendor Verified -> teal/green
+        if (s.includes('gm/ceo') && s.includes('approved')) return 'badge-progress'; // GM/CEO Approved -> amber
         if (s.includes('approved'))   return 'badge-fulfilled';   // #3 MD Approved -> green
         if (s.includes('received') && s.includes('partial')) return 'badge-partial';
         if (s === 'received')         return 'badge-received';
@@ -2250,6 +2385,7 @@
                     <select class="table-select col-itemstatus" disabled style="background:#f1f5f9;">
                         <option value="Pending"          ${it.itemStatus==='Pending'?'selected':''}>⏳ Pending</option>
                         <option value="PO Generated"     ${it.itemStatus==='PO Generated'?'selected':''}>🛒 PO Generated</option>
+                        <option value="GM/CEO Approved"  ${it.itemStatus==='GM/CEO Approved'?'selected':''}>🟡 GM/CEO Approved</option>
                         <option value="MD Approved"      ${it.itemStatus==='MD Approved'?'selected':''}>🟢 MD Approved</option>
                         <option value="Vendor Verified"  ${it.itemStatus==='Vendor Verified'?'selected':''}>🟩 Vendor Verified</option>
                         <option value="Received"         ${it.itemStatus==='Received'?'selected':''}>📥 Received</option>
@@ -2728,6 +2864,7 @@
                 <td><input type="number" class="po-itemqty" min="0" max="${it.qtyAvailable||0}" step="any" value="${it.qtyAvailable||0}" style="background:#dbeafe;font-weight:700;"></td>
                 <td><input type="number" class="po-cancelqty" min="0" max="${it.qtyAvailable||0}" step="any" value="0" style="background:#fef2f2;color:#b91c1c;font-weight:700;"></td>
                 <td>${escapeHtml(it.uom||'')}</td>
+                <td><input type="number" class="po-grossweight" min="0" step="any" value="${(it.grossWeight!=null&&it.grossWeight!=='')?it.grossWeight:''}" placeholder="kg" style="${isYarnOrBriquette(it.itemName)?'':'display:none;'}background:#fef9c3;"></td>
                 <td><input type="number" class="po-unitprice" min="0" step="0.01" value="0" placeholder="0.00"></td>
                 <td class="po-total" data-total="0">0.00</td>
             </tr>
@@ -2807,9 +2944,15 @@
             const up    = Number(tr.querySelector('.po-unitprice').value) || 0;
             const poQty = Number(tr.querySelector('.po-itemqty').value)  || 0;
             const cancelQty = Number(tr.querySelector('.po-cancelqty').value) || 0;
+            const gwInp = tr.querySelector('.po-grossweight');
+            let grossWeight = null;
+            if (gwInp && gwInp.style.display !== 'none' && gwInp.value !== '') {
+                const v = parseFloat(gwInp.value);
+                if (!isNaN(v)) grossWeight = v;
+            }
             if (up <= 0)    allPriced = false;
             if (poQty <= 0) allHaveQty = false;
-            items.push({ reqNo: it.reqNo, srNo: it.srNo, unitPrice: up, poQty: poQty, cancelQty: cancelQty });
+            items.push({ reqNo: it.reqNo, srNo: it.srNo, unitPrice: up, poQty: poQty, cancelQty: cancelQty, grossWeight: grossWeight });
         });
         if (!allHaveQty){
             showToast('&#9888; One or more items have PO Qty = 0. Set qty before generating.', 'warn', 5000);
@@ -2895,11 +3038,135 @@
         }
     }
 
+    /* ---------- #6 PO EDIT MODAL (1-hour window, Generated POs only) ---------- */
+    let PO_EDIT_CURRENT = null;
+
+    async function openPoEditModal(poNo){
+        showSyncOverlay('Loading PO...');
+        try {
+            const result = await syncToCloud({ action: 'getPODetail', poNo: poNo });
+            hideSyncOverlay();
+            if (result.status !== 'OK'){
+                showToast('&#10060; '+(result.message||'Could not load PO'), 'error', 6000);
+                return;
+            }
+            const m = result.master, items = result.items || [];
+            if (!m.editable){
+                showToast('&#9888; This PO is no longer editable (status changed or 1-hour window expired).', 'warn', 6000);
+                return;
+            }
+            PO_EDIT_CURRENT = { poNo: m.poNo, items: items };
+
+            $('poEditNoLabel').textContent = m.poNo;
+            $('poEditWindowLabel').textContent = '⏳ Editable for ' + (m.editMinutesLeft||0) + ' more minute(s) — only while status is "Generated" and no approvals have been signed.';
+            $('poEditVendorName').value    = m.vendorName || '';
+            $('poEditVendorMail').value    = m.vendorMail || '';
+            $('poEditVendorAddress').value = m.vendorAddress || '';
+            $('poEditVendorContact').value = m.vendorContact || '';
+            $('poEditDeliveryDate').value  = m.deliveryDate || '';
+            $('poEditPaymentTerms').value  = m.paymentTerms || 'Payment terms 90 days after receipt of bill';
+            $('poEditGstPct').value        = m.gstPercent != null ? m.gstPercent : 18;
+            $('poEditLocationContact').value = m.locationContact || '';
+            $('poEditFreight').value       = m.freight || 0;
+            $('poEditOtherLabel').value    = m.otherExpenseLabel || 'Labour Other Exp.';
+            $('poEditOtherExp').value      = m.otherExpense || 0;
+            $('poEditNotes').value         = m.importantNotes || '';
+
+            $('poEditItemsBody').innerHTML = items.map((it,i) => `
+                <tr data-srno="${it.srNo}">
+                    <td style="text-align:center;">${i+1}</td>
+                    <td><b>${escapeHtml(it.itemName||'')}</b><br><small style="color:#64748b;">${escapeHtml(it.itemDesc||'')}</small></td>
+                    <td style="text-align:center;">${(it.qty||0).toLocaleString('en-IN')}</td>
+                    <td style="text-align:center;">${escapeHtml(it.uom||'')}</td>
+                    <td><input type="number" class="po-edit-unitprice" min="0" step="0.01" value="${it.unitPrice||0}"></td>
+                    <td class="po-edit-total" style="text-align:right;font-weight:700;" data-total="${it.total||0}">${fmtMoney(it.total||0)}</td>
+                </tr>
+            `).join('');
+
+            $('poEditItemsBody').querySelectorAll('.po-edit-unitprice').forEach((inp,i) => {
+                inp.addEventListener('input', () => {
+                    const up = Number(inp.value) || 0;
+                    const qty = Number(items[i].qty) || 0;
+                    const tot = inp.closest('tr').querySelector('.po-edit-total');
+                    tot.dataset.total = up * qty;
+                    tot.textContent = fmtMoney(up * qty);
+                    recalcPoEditTotal();
+                });
+            });
+
+            recalcPoEditTotal();
+            $('poEditModal').classList.add('active');
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 6000);
+        }
+    }
+
+    function closePoEditModal(){
+        $('poEditModal').classList.remove('active');
+        PO_EDIT_CURRENT = null;
+    }
+
+    function recalcPoEditTotal(){
+        let subtotal = 0;
+        $('poEditItemsBody').querySelectorAll('.po-edit-total').forEach(td => {
+            subtotal += Number(td.dataset.total) || 0;
+        });
+        const freight = Number($('poEditFreight').value) || 0;
+        const other   = Number($('poEditOtherExp').value) || 0;
+        const gstPct  = Number($('poEditGstPct').value) || 0;
+        const taxable = subtotal + freight + other;
+        const grand   = taxable + (taxable * gstPct / 100);
+        $('poEditGrandTotalView').textContent = '₹ ' + fmtMoney(grand);
+    }
+
+    async function savePoEdit(){
+        if (!PO_EDIT_CURRENT) return;
+        const items = PO_EDIT_CURRENT.items.map((it,i) => {
+            const tr = $('poEditItemsBody').querySelectorAll('tr')[i];
+            return { srNo: it.srNo, unitPrice: Number(tr.querySelector('.po-edit-unitprice').value) || 0 };
+        });
+        const payload = {
+            action: 'editPO',
+            poNo: PO_EDIT_CURRENT.poNo,
+            vendorName:     $('poEditVendorName').value.trim(),
+            vendorMail:     $('poEditVendorMail').value.trim(),
+            vendorAddress:  $('poEditVendorAddress').value.trim(),
+            vendorContact:  $('poEditVendorContact').value.trim(),
+            deliveryDate:   $('poEditDeliveryDate').value,
+            paymentTerms:   $('poEditPaymentTerms').value,
+            gstPercent:     Number($('poEditGstPct').value) || 0,
+            locationContact: $('poEditLocationContact').value.trim(),
+            freight:        Number($('poEditFreight').value) || 0,
+            otherExpenseLabel: $('poEditOtherLabel').value.trim() || 'Labour Other Exp.',
+            otherExpense:   Number($('poEditOtherExp').value) || 0,
+            importantNotes: $('poEditNotes').value.trim(),
+            items: items,
+            updatedBy: localStorage.getItem(UPDATED_BY_KEY) || ''
+        };
+        showSyncOverlay('Saving PO changes...');
+        try {
+            const result = await syncToCloud(payload);
+            hideSyncOverlay();
+            if (result.status === 'OK'){
+                showToast('&#9989; <b>'+result.poNo+'</b> updated. Grand Total: <b>₹'+fmtMoney(result.grandTotal)+'</b>', 'success', 6000);
+                if (result.pdfUrl) openPdfForPrint(result.pdfUrl, result.poNo);
+                closePoEditModal();
+                loadPoList();
+            } else {
+                showToast('&#10060; '+(result.message||'Update failed'), 'error', 8000);
+            }
+        } catch(err){
+            hideSyncOverlay();
+            showToast('&#10060; '+err.message, 'error', 8000);
+        }
+    }
+
     function renderPoList(items){
         $('poListCount').textContent = items.length;
         const tbody = $('poListBody');
         if (!items.length){
-            tbody.innerHTML = '<tr><td colspan="9" class="empty-state"><div class="ico">📜</div>No POs found</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="10" class="empty-state"><div class="ico">📜</div>No POs found</td></tr>';
             return;
         }
         tbody.innerHTML = items.map(it => `
@@ -2911,10 +3178,17 @@
                 <td style="text-align:center;">${it.totalItems}</td>
                 <td style="text-align:center;">${(it.totalQty||0).toLocaleString('en-IN')}</td>
                 <td style="text-align:right;font-weight:700;">₹ ${fmtMoney(it.grandTotal)}</td>
-                <td><span class="badge ${statusBadgeClass(it.status)}">${escapeHtml(it.status||'Generated')}</span></td>
+                <td><span class="badge ${statusBadgeClass(it.status)}">${escapeHtml(it.status||'Generated')}</span>${it.rejectedBy?'<br><small style="color:#991b1b;" title="'+escapeHtml(it.rejectReason||'')+'">by '+escapeHtml(it.rejectedBy)+'</small>':''}</td>
                 <td>${it.pdfLink?'<a href="'+escapeHtml(it.pdfLink)+'" target="_blank" style="color:#0284c7;text-decoration:underline;font-weight:700;">📄 PDF</a>':'<small style="color:#94a3b8;">No PDF</small>'}</td>
+                <td>${it.editable
+                    ? '<button class="btn btn-primary btn-sm po-edit-btn" data-pono="'+escapeHtml(it.poNo)+'" style="background:linear-gradient(180deg,#f59e0b 0%,#b45309 100%);" title="Editable for '+(it.editMinutesLeft||0)+' more minute(s)">✏️ Edit ('+(it.editMinutesLeft||0)+'m)</button>'
+                    : '<small style="color:#94a3b8;">—</small>'}</td>
             </tr>
         `).join('');
+
+        tbody.querySelectorAll('.po-edit-btn').forEach(btn => {
+            btn.addEventListener('click', () => openPoEditModal(btn.dataset.pono));
+        });
     }
 
     /* ================================================================
@@ -3388,6 +3662,11 @@
     $('poBuildBtn').addEventListener('click', openPoBuildModal);
     $('poBuildCancelBtn').addEventListener('click', closePoBuildModal);
     $('poBuildConfirmBtn').addEventListener('click', confirmPoBuild);
+    $('poEditCancelBtn').addEventListener('click', closePoEditModal);
+    $('poEditSaveBtn').addEventListener('click', savePoEdit);
+    ['poEditFreight','poEditOtherExp','poEditGstPct'].forEach(id=>{
+        $(id).addEventListener('input', recalcPoEditTotal);
+    });
     $('poBuildModal').addEventListener('click', (e)=>{ if (e.target.id === 'poBuildModal') closePoBuildModal(); });
     $('poStoreSignClearBtn').addEventListener('click', clearStoreSignCanvas);
     /* #13 vendor auto-fill on blur / selection from datalist */
@@ -3437,7 +3716,7 @@
     });
 
     document.addEventListener('keydown', (e)=>{
-        if (e.key === 'Escape'){ closeConfirmModal(); closeMasterActionModal(); closePoBuildModal(); closeReceiveModal(); }
+        if (e.key === 'Escape'){ closeConfirmModal(); closeMasterActionModal(); closePoBuildModal(); closePoEditModal(); closeReceiveModal(); }
         if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
             e.preventDefault();
             if (document.querySelector('.nav-link.active').dataset.tab === 'entry'){

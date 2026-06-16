@@ -1625,7 +1625,7 @@
        ███████████████████████████████████████████████████████████████████
        ═══════════════════════════════════════════════════════════════════ */
 
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyRT7P_OhinNgNLnwkhU3Oh66Lsz7CdLev5PDPSx2iw1F3RX-fCbbjooNwis9Hhtxpg0g/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUSiQ2LwW2UISMv86k662_r_3i5gyy6rcXkHnju4XERmuEnx98Arm2ElJM_zDTQ31-/exec";
 
     /* ═══════════════════════════════════════════════════════════════════
        ⬆️ Bas yahi ek line edit karni hai - aage kuch chedhna nahi. ⬆️
@@ -3399,21 +3399,25 @@
             tbody.innerHTML = '<tr><td colspan="11" class="empty-state"><div class="ico">📥</div>No open POs to receive</td></tr>';
             return;
         }
-        tbody.innerHTML = items.map(po => `
-            <tr>
-                <td><b style="color:#0284c7;">${escapeHtml(po.poNo)}</b></td>
+        tbody.innerHTML = items.map(po => {
+            const noData = !po.hasItemData;
+            const rcvBtn = noData
+                ? `<button class="btn btn-neutral btn-sm rec-open-btn" data-pono="${escapeHtml(po.poNo)}" title="No item lines found in PO_Items sheet">⚠️ Check Data</button>`
+                : `<button class="btn btn-success btn-sm rec-open-btn" data-pono="${escapeHtml(po.poNo)}">📥 Receive</button>`;
+            return `<tr${noData?' style="background:#fffbeb;"':''}>
+                <td><b style="color:#0284c7;">${escapeHtml(po.poNo)}</b>${noData?'<br><small style="color:#b45309;">⚠️ No item data</small>':''}</td>
                 <td>${escapeHtml(po.poDate||'')}</td>
                 <td><b>${escapeHtml(po.vendorName||'')}</b>${po.vendorMail?'<br><small style="color:#64748b;">📧 '+escapeHtml(po.vendorMail)+'</small>':''}</td>
                 <td><small>${escapeHtml(po.linkedReqNos||'')}</small></td>
-                <td style="text-align:center;">${po.totalItems}</td>
-                <td style="text-align:center;"><b>${po.pendingItems}</b></td>
-                <td style="text-align:center;">${(po.totalOrdered||0).toLocaleString('en-IN')}</td>
-                <td style="text-align:center;color:#047857;font-weight:700;">${(po.totalReceived||0).toLocaleString('en-IN')}</td>
-                <td style="text-align:center;background:#fef3c7;color:#b45309;font-weight:800;">${(po.totalPending||0).toLocaleString('en-IN')}</td>
+                <td style="text-align:center;">${noData?'—':po.totalItems}</td>
+                <td style="text-align:center;"><b>${noData?'—':po.pendingItems}</b></td>
+                <td style="text-align:center;">${noData?'—':(po.totalOrdered||0).toLocaleString('en-IN')}</td>
+                <td style="text-align:center;color:#047857;font-weight:700;">${noData?'—':(po.totalReceived||0).toLocaleString('en-IN')}</td>
+                <td style="text-align:center;background:#fef3c7;color:#b45309;font-weight:800;">${noData?'—':(po.totalPending||0).toLocaleString('en-IN')}</td>
                 <td><span class="badge ${statusBadgeClass(po.status)}">${escapeHtml(po.status||'Generated')}</span></td>
-                <td style="text-align:center;"><button class="btn btn-success btn-sm rec-open-btn" data-pono="${escapeHtml(po.poNo)}">📥 Receive</button></td>
-            </tr>
-        `).join('');
+                <td style="text-align:center;">${rcvBtn}</td>
+            </tr>`;
+        }).join('');
 
         tbody.querySelectorAll('.rec-open-btn').forEach(btn => {
             btn.addEventListener('click', () => openReceiveModal(btn.dataset.pono));
@@ -3423,6 +3427,10 @@
     function openReceiveModal(poNo){
         const po = REC_POS_CACHE.find(x => x.poNo === poNo);
         if (!po) { showToast('&#9888; PO not in cache.', 'warn', 3000); return; }
+        if (!po.hasItemData) {
+            showToast('&#9888; No item lines found in PO_Items sheet for ' + poNo + '. This PO may have been added manually or its item data is missing. Please check the PO_Items sheet.', 'error', 8000);
+            return;
+        }
         REC_CURRENT_PO = po;
 
         $('receiveModalSub').textContent = 'PO: ' + po.poNo + ' · Vendor: ' + po.vendorName;

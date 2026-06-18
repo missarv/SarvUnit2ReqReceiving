@@ -762,7 +762,7 @@
                                 <th style="width: 11%;">Machine Name &amp; No.</th>
                                 <th style="width: 7%;">Qty <span style="color:#dc2626;">*</span></th>
                                 <th style="width: 7%;">UOM</th>
-                                <th style="width: 8%;" title="Only for Yarn / Briquettes items">Gross Wt. (kg)</th>
+                                <th style="width: 8%;">Gross Wt. (kg)</th>
                                 <th style="width: 12%;">Item Remarks</th>
                                 <th style="width: 4%;"></th>
                             </tr>
@@ -1051,6 +1051,7 @@
                                     <th>PDF</th>
                                     <th>WhatsApp</th>
                                     <th>Edit</th>
+                                    <th>Cancel</th>
                                 </tr>
                             </thead>
                             <tbody id="poListBody"></tbody>
@@ -1326,7 +1327,7 @@
                             <th style="width:10%; background:#dbeafe; color:#1d4ed8;">PO Qty <span style="color:#dc2626;">*</span></th>
                             <th style="width:8%; background:#fef2f2; color:#b91c1c;" title="Cancel remaining qty now (optional)">Cancel</th>
                             <th style="width:5%;">UOM</th>
-                            <th style="width:7%; background:#fef9c3; color:#854d0e;" title="Only for Yarn / Briquettes items">Gross Wt (kg)</th>
+                            <th style="width:7%; background:#fef9c3; color:#854d0e;">Gross Wt (kg)</th>
                             <th style="width:11%;">Unit Price <span style="color:#dc2626;">*</span></th>
                             <th style="width:9%; text-align:right;">Total</th>
                         </tr>
@@ -1625,7 +1626,7 @@
        ███████████████████████████████████████████████████████████████████
        ═══════════════════════════════════════════════════════════════════ */
 
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUSiQ2LwW2UISMv86k662_r_3i5gyy6rcXkHnju4XERmuEnx98Arm2ElJM_zDTQ31-/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwViNFzGfOfHJBiiKAvrViCrcm4jsMizSlJZ1qWR7KielE3F1QHX49KT5alu-VdMyK8zA/exec";
 
     /* ═══════════════════════════════════════════════════════════════════
        ⬆️ Bas yahi ek line edit karni hai - aage kuch chedhna nahi. ⬆️
@@ -1820,7 +1821,7 @@
             <td><input type="text" class="table-input col-machine" placeholder="e.g. Loom-3 / M-12" list="dl-item-machines" autocomplete="off" value="${escapeHtml(data.machineNo||'')}"></td>
             <td><input type="number" class="table-input col-qty" placeholder="0" min="0" step="any" value="${data.qty||''}"></td>
             <td><select class="table-select col-uom">${buildUomOptions(data.uom||'Pcs')}</select></td>
-            <td><input type="number" class="table-input col-grossweight" placeholder="kg" min="0" step="any" value="${(data.grossWeight!=null&&data.grossWeight!=='')?data.grossWeight:''}" style="display:none;background:#fef9c3;"></td>
+            <td><input type="number" class="table-input col-grossweight" placeholder="kg" min="0" step="any" value="${(data.grossWeight!=null&&data.grossWeight!=='')?data.grossWeight:''}" style="background:#fef9c3;"></td>
             <td><input type="text" class="table-input col-rem" placeholder="optional note" value="${escapeHtml(data.remarks||'')}"></td>
             <td style="text-align:center;"><button class="delete-row-btn" title="Remove">&times;</button></td>
         `;
@@ -1837,23 +1838,9 @@
             el.addEventListener('change',()=>{ recalcTotals(); saveDraft(); });
         });
 
-        // #1/#4 Gross Weight input only applies to Yarn / Briquettes items - show/hide based on Item Name
-        const nameInp = tr.querySelector('.col-name');
-        const gwInp   = tr.querySelector('.col-grossweight');
-        const toggleGrossWeight = () => {
-            if (isYarnOrBriquette(nameInp.value)) {
-                gwInp.style.display = '';
-            } else {
-                gwInp.style.display = 'none';
-                gwInp.value = '';
-            }
-        };
-        nameInp.addEventListener('input', toggleGrossWeight);
-        nameInp.addEventListener('change', toggleGrossWeight);
-        toggleGrossWeight();
-
         // Auto-fill other fields when a known Item Name is selected from the datalist.
         // Fires on both keyboard selection and paste — only populates blank sibling fields.
+        const nameInp = tr.querySelector('.col-name');
         const tryAutoFill = () => {
             const val = nameInp.value.trim().toLowerCase();
             if (!val) return;
@@ -1867,11 +1854,6 @@
         recalcTotals();
     }
 
-    // #1/#4 Gross Weight applies only when the item name contains "yarn" or "briquette(s)"
-    function isYarnOrBriquette(itemName){
-        const n = String(itemName||'').toLowerCase();
-        return n.indexOf('yarn') !== -1 || n.indexOf('briquette') !== -1;
-    }
 
     function refreshSerials(){
         document.querySelectorAll('#itemTableBody tr').forEach((tr,i)=>{
@@ -1909,7 +1891,7 @@
                 uom:      r.querySelector('.col-uom').value,
                 grossWeight: (function(){
                     const gw = r.querySelector('.col-grossweight');
-                    if (gw.style.display === 'none' || gw.value === '') return null;
+                    if (gw.value === '') return null;
                     const v = parseFloat(gw.value);
                     return isNaN(v) ? null : v;
                 })(),
@@ -2956,7 +2938,7 @@
                 <td><input type="number" class="po-itemqty" min="0" max="${it.qtyAvailable||0}" step="any" value="${it.qtyAvailable||0}" style="background:#dbeafe;font-weight:700;"></td>
                 <td><input type="number" class="po-cancelqty" min="0" max="${it.qtyAvailable||0}" step="any" value="0" style="background:#fef2f2;color:#b91c1c;font-weight:700;"></td>
                 <td>${escapeHtml(it.uom||'')}</td>
-                <td><input type="number" class="po-grossweight" min="0" step="any" value="${(it.grossWeight!=null&&it.grossWeight!=='')?it.grossWeight:''}" placeholder="kg" style="${isYarnOrBriquette(it.itemName)?'':'display:none;'}background:#fef9c3;"></td>
+                <td><input type="number" class="po-grossweight" min="0" step="any" value="${(it.grossWeight!=null&&it.grossWeight!=='')?it.grossWeight:''}" placeholder="kg" style="background:#fef9c3;"></td>
                 <td><input type="number" class="po-unitprice" min="0" step="0.01" value="0" placeholder="0.00"></td>
                 <td class="po-total" data-total="0">0.00</td>
             </tr>
@@ -3039,7 +3021,7 @@
             const cancelQty = Number(tr.querySelector('.po-cancelqty').value) || 0;
             const gwInp = tr.querySelector('.po-grossweight');
             let grossWeight = null;
-            if (gwInp && gwInp.style.display !== 'none' && gwInp.value !== '') {
+            if (gwInp && gwInp.value !== '') {
                 const v = parseFloat(gwInp.value);
                 if (!isNaN(v)) grossWeight = v;
             }
@@ -3120,7 +3102,7 @@
     /* ---- PO List sub-panel ---- */
     async function loadPoList(){
         if (!URL_IS_CONFIGURED){
-            $('poListBody').innerHTML = '<tr><td colspan="11" class="empty-state">⚠️ URL not configured.</td></tr>';
+            $('poListBody').innerHTML = '<tr><td colspan="12" class="empty-state">⚠️ URL not configured.</td></tr>';
             return;
         }
         showSyncOverlay('Loading POs...');
@@ -3297,7 +3279,7 @@
         $('poListCount').textContent = items.length;
         const tbody = $('poListBody');
         if (!items.length){
-            tbody.innerHTML = '<tr><td colspan="11" class="empty-state"><div class="ico">📜</div>No POs found</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="12" class="empty-state"><div class="ico">📜</div>No POs found</td></tr>';
             return;
         }
         tbody.innerHTML = items.map(it => {
@@ -3323,11 +3305,38 @@
                 <td>${it.editable
                     ? '<button class="btn btn-primary btn-sm po-edit-btn" data-pono="'+escapeHtml(it.poNo)+'" style="background:linear-gradient(180deg,#f59e0b 0%,#b45309 100%);" title="Editable for '+(it.editMinutesLeft||0)+' more minute(s)">✏️ Edit ('+(it.editMinutesLeft||0)+'m)</button>'
                     : '<small style="color:#94a3b8;">—</small>'}</td>
+                <td>${it.cancellable
+                    ? '<button class="btn btn-sm po-cancel-btn" data-pono="'+escapeHtml(it.poNo)+'" style="background:linear-gradient(180deg,#ef4444 0%,#991b1b 100%);color:#fff;padding:4px 8px;font-size:11px;" title="Cancel this PO (qty will be released back to pending)">✖ Cancel</button>'
+                    : '<small style="color:#94a3b8;">—</small>'}</td>
             </tr>`;
         }).join('');
 
         tbody.querySelectorAll('.po-edit-btn').forEach(btn => {
             btn.addEventListener('click', () => openPoEditModal(btn.dataset.pono));
+        });
+
+        tbody.querySelectorAll('.po-cancel-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const poNo = btn.dataset.pono;
+                if (!confirm('Are you sure you want to CANCEL PO ' + poNo + '?\n\nThis will release all item quantities back to the pending pool for new POs.')) return;
+                btn.disabled = true;
+                btn.textContent = '⏳ Cancelling...';
+                try {
+                    const result = await syncToCloud({ action: 'cancelPO', poNo: poNo, cancelledBy: localStorage.getItem('lastUser') || '' });
+                    if (result.status === 'OK') {
+                        showToast('✅ ' + (result.message || 'PO cancelled successfully.'), 'success', 5000);
+                        loadPoList();
+                    } else {
+                        showToast('❌ ' + (result.message || 'Cancel failed'), 'error', 6000);
+                        btn.disabled = false;
+                        btn.textContent = '✖ Cancel';
+                    }
+                } catch (err) {
+                    showToast('❌ Error: ' + err.message, 'error', 6000);
+                    btn.disabled = false;
+                    btn.textContent = '✖ Cancel';
+                }
+            });
         });
 
         tbody.querySelectorAll('.wa-send-btn').forEach(btn => {
